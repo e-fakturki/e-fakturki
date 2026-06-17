@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,13 +11,21 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@primeuix/themes": "^2.0.3",
+    "@primevue/forms": "^4.5.4",
     "@tailwindcss/vite": "^4.1.18",
-    "axios": "^1.13.4",
+    "@tanstack/vue-query": "^5.95.2",
+    "@tanstack/vue-query-devtools": "^6.1.10",
+    "axios": "^1.13.6",
     "fuzzy-search": "^3.2.1",
     "json5": "^2.2.3",
+    "jwt-decode": "^4.0.0",
     "pinia": "^3.0.4",
     "primeicons": "^7.0.0",
-    "vue": "^3.5.24"
+    "primevue": "^4.5.4",
+    "vue": "^3.5.24",
+    "vue-router": "^5.0.3",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

@@ -1,0 +1,117 @@
+const invoiceData = {
+  id: "ab81a738-a1f1-4bc4-902b-e1f3b0773146",
+  invoice_number: "F 0021/2026",
+  invoice_type: "VAT",
+  //   ksef_number: "6572490362-20260206-010080378885-08",
+  ksef_number: null,
+  ksef_status: "not_sent",
+  //   ksef_status: "rejected",
+  //   ksef_status: "accepted",
+  is_new: true,
+  //###
+  issue_date: "2026-02-06T00:00:00",
+  issue_place: "Kielce",
+  exec_date: "2026-02-06T00:00:00",
+  //###
+  seller_name: "Przetwórstwo Mięsa Iwona Karwat",
+  seller_nip: "6572490362",
+  seller_address: {
+    country: "Polska",
+    city: "Pierzchnica",
+    postal_code: "26-015",
+    street: "Ujny",
+    building_number: "16",
+  },
+  seller_contact: {
+    phone: "+48 606 734 543",
+    email: "przetworstwo@gmail.com",
+    correspondance_address: {
+      country: null,
+      city: null,
+      postal_code: null,
+      street: null,
+      building_number: null,
+    },
+  },
+  //#
+  buyer_name: "ALBLA MACIEJ PIOTROWSKI",
+  buyer_nip: "6572341234",
+  buyer_addrees: {
+    country: "Polska",
+    city: "Pierzchnica",
+    postal_code: "26-015",
+    street: "Pierzchnianka",
+    building_number: "108C",
+  },
+  buyer_contact: {
+    phone: "+48 665 243 776",
+    email: null,
+    correspondance_address: {
+      country: null,
+      city: null,
+      postal_code: null,
+      street: null,
+      building_number: null,
+    },
+  },
+  //###
+  items: [
+    {
+      record_nr: 1,
+      name: "Zestaw klocki lego",
+      amount: 2,
+      unit: "szt",
+      price_net: 50.0,
+      price_gross: 52.5,
+      tax_rate: 5,
+      tax_total: 5.0,
+      net_total: 100.0,
+      gross_total: 105.0,
+      delivery_date: "2026-02-06T00:00:00",
+    },
+    {
+      record_nr: 2,
+      name: "Piłka Adidas 2026",
+      amount: 3,
+      unit: "szt",
+      price_net: 77.0,
+      price_gross: 100.0,
+      tax_rate: 23,
+      tax_total: 31.0,
+      net_total: 231.0,
+      gross_total: 300.0,
+      delivery_date: "2026-02-06T00:00:00",
+    },
+    {
+      record_nr: 3,
+      name: "Cos na wage",
+      amount: 3.54,
+      unit: "kg",
+      price_net: 10.0,
+      price_gross: 10.8,
+      tax_rate: 8,
+      tax_total: 5.4,
+      net_total: 35.4,
+      gross_total: 38.23,
+      delivery_date: "2026-02-06T00:00:00",
+    },
+  ],
+  //###
+  currency: "PLN",
+  net_total: "366.00",
+  tax_total: "41.00",
+  gross_total: "443.00",
+  //##
+  payment_status: "unpaid",
+  payment_type: "bank_transfer",
+  payment_due_date: "2026-02-20T00:00:00",
+  payment_details: {
+    bank_name: "Bank Spółdzielczy w Chmielniku",
+    iban: "37 8483 0001 3001 0047 8708 0001",
+    transfer_title: null,
+  },
+  //###
+  additional_info: null,
+};
+
+export default invoiceData;
