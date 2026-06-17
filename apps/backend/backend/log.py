@@ -21,7 +21,8 @@ class InterceptHandler(logging.Handler):
         """
         Propagates logs to loguru.
 
-        :param record: record to log.
+        Args:
+            record: record to log.
         """
         try:
             level: str | int = logger.level(record.levelname).name

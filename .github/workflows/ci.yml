@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main, feature/*, hotfix/*, refactor/*]
+
+jobs:
+  backend:
+    name: Backend checks (ruff + mypy)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: apps/backend
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v1
+        with:
+          version: latest
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Ruff (lint)
+        id: ruff
+        run: uv run ruff check .
+        continue-on-error: true
+
+      - name: Ruff (format check)
+        id: ruff-format
+        run: uv run ruff format --check .
+        continue-on-error: true
+
+      - name: MyPy (full check)
+        id: mypy
+        run: uv run mypy .
+        continue-on-error: true
+
+      - name: Fail job if any step failed
+        run: |
+          if [ "${{ steps.ruff.outcome }}" != "success" ] || \
+             [ "${{ steps.ruff-format.outcome }}" != "success" ] || \
+             [ "${{ steps.mypy.outcome }}" != "success" ]; then
+            echo "One or more checks failed"
+            exit 1
+          fi
+
+  frontend:
+    name: Frontend checks (eslint + prettier)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: apps/frontend
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install deps
+        run: npm ci
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Prettier check
+        run: npm run format -- --check

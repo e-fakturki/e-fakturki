@@ -8,8 +8,11 @@ async def get_db_session(request: Request) -> AsyncGenerator[AsyncSession]:
     """
     Create and get database session.
 
-    :param request: current request.
-    :yield: database session.
+    Args:
+        request: current request.
+
+    Yields:
+        Database session.
     """
     session: AsyncSession = request.app.state.db_session_factory()
 

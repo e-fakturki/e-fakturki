@@ -2,38 +2,27 @@ repos:
   - repo: local
     hooks:
       # ---------- BACKEND ----------
-      - id: ruff-format-backend
-        name: Ruff format (backend)
-        entry: bash -c "cd apps/backend && uv run ruff format"
-        language: system
-        pass_filenames: false
-        always_run: true
+      # - id: ruff-format-backend
+      #   name: Ruff format (backend)
+      #   entry: bash -c "uv run ruff format --force-exclude \"$@\""
+      #   language: system
+      #   files: ^apps/backend/.*\.py$
 
-      - id: ruff-backend
-        name: Ruff check (backend)
-        entry: bash -c "cd apps/backend && uv run ruff check ."
-        language: system
-        pass_filenames: false
-        always_run: true
-
-      - id: mypy-backend
-        name: MyPy validate types (backend)
-        entry: bash -c "cd apps/backend && uv run mypy ."
-        language: system
-        pass_filenames: false
-        always_run: true
+      # - id: ruff-backend
+      #   name: Ruff check (backend)
+      #   entry: bash -c "uv run ruff check --force-exclude \"$@\""
+      #   language: system
+      #   files: ^apps/backend/.*\.py$
 
       # ---------- FRONTEND ----------
       - id: prettier-frontend
         name: Prettier (frontend)
-        entry: bash -c "cd apps/frontend && npm run format"
+        entry: bash -c "cd apps/frontend && npm run format --  \"$@\""
         language: system
-        pass_filenames: false
-        always_run: true
+        files: ^apps/frontend/
 
       - id: eslint-frontend
         name: ESLint (frontend)
-        entry: bash -c "cd apps/frontend && npm run lint"
+        entry: bash -c "cd apps/frontend && npm run lint --  \"$@\""
         language: system
-        pass_filenames: false
-        always_run: true
+        files: ^apps/frontend/

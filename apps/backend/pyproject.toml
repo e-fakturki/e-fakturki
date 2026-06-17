@@ -17,6 +17,16 @@ dependencies = [
   "aiosqlite >=0.21.0,<1",
   "httptools >=0.7.1,<1",
   "pymongo >=4.15.4,<5",
+  "ksef_client >=0.14.0",
+  "python-multipart >=0.0.22",
+  "lxml >=6.0.2",
+  "xsdata >=26.2",
+  "xmlsec >=1.3.17",
+  "python-dateutil >=2.9.0.post0",
+  "pwdlib[argon2] >=0.3.0",
+  "pyjwt >=2.12.1",
+  "babel >=2.18.0",
+  "cryptography >=48.0.0",
 ]
 
 [dependency-groups]
@@ -41,6 +51,7 @@ multi_line_output = 3
 src_paths = ["backend",]
 
 [tool.mypy]
+plugins = ["sqlalchemy.ext.mypy.plugin"]
 python_version = "3.13"
 strict = true
 ignore_missing_imports = true
@@ -99,21 +110,30 @@ lint.select = [ "E",     # Error
 	"UP",	 # Python updates
 ]
 lint.ignore = [
+    "E501",    # Line too long
     "D105",    # Missing docstring in magic method
     "D107",    # Missing docstring in __init__
     "B008",    # Do not perform function calls in argument defaults
     "D211",    # No blank lines allowed before class docstring
     "D212",    # Multi-line docstring summary should start at the first line
+    "D400",    # First line should end with a period
     "D401",    # First line should be in imperative mood
     "D104",    # Missing docstring in public package
     "D100",    # Missing docstring in public module
     "D202",    # No blank lines allowed after function docstring
+    "D204",    # No blank lines allowed after class docstring
+    "D205",    # 1 blank line required between summary line and description
     "ANN401",  # typing.Any are disallowed in `**kwargs
+    "ANN204",  # Missing return type annotation for __init__
     "PLR0913", # Too many arguments for function call
     "D106",    # Missing docstring in public nested class
+    "I001",    # Unsorted imports 
+    "E402",    # Module level import not at top of file
+    "UP017",   # Use datetime.UTC alias
 ]
 exclude = [
     "backend/db/migrations",
+    "backend/web/api/**/*.ipynb",
     ".venv/"
 ]
 lint.mccabe = { max-complexity = 10 }
@@ -123,6 +143,11 @@ line-length = 88
 "tests/*" = [
     "S101",    # Use of assert detected
 	"PLC0415", # Import outside toplevel
+]
+"backend/domain/fa3_xml_utils/models/*" = [
+    "D200",    # One-line docstring should fit on one line
+    "D101",    # Missing docstring in public class
+    "RUF002",  # Docstring contains ambiguous characters
 ]
 
 [tool.ruff.lint.pydocstyle]
