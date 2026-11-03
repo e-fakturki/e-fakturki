@@ -83,7 +83,7 @@ async def get_products_list_paginated(
     search_string: str | None,
     page_size: int,
     page_offset: int,
-) -> list[ProductListResponse]:
+) -> ProductListResponse:
     """Get a paginated list of product records."""
 
     # Get total count of products
