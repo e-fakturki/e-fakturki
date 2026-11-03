@@ -2,7 +2,7 @@
 import { Dialog, Button } from "primevue";
 import type { CompanyListItem } from "../../lib/types/company";
 
-type DeletionStringType = "firmę" | "produkt" | "kategorię" | "fakturę" | "konto";
+type DeletionStringType = "firmę" | "produkt" | "kategorię" | "fakturę" | "konto" | "rekord";
 
 const props = defineProps<{
   visible: boolean;

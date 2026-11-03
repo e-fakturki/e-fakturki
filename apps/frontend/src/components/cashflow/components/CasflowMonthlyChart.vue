@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { Line } from "vue-chartjs";
-
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -21,11 +21,34 @@ const props = defineProps<{
   selectedMonth: number | null;
 }>();
 
+const getChartColors = () => {
+  const styles = getComputedStyle(document.documentElement);
+  return {
+    text: styles.getPropertyValue("--chart-text").trim(),
+    grid: styles.getPropertyValue("--chart-grid").trim(),
+    tooltipBackground: styles.getPropertyValue("--chart-tooltip-bg").trim(),
+  };
+};
+const chartColors = ref(getChartColors());
+let themeObserver: MutationObserver | undefined;
+
+onMounted(() => {
+  themeObserver = new MutationObserver(() => {
+    chartColors.value = getChartColors();
+  });
+  themeObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
+});
+
+onUnmounted(() => themeObserver?.disconnect());
+
 // Randomly generated cashflow values for demonstration purposes
 const monthCount = props.selectedMonth ?? 12;
 const cashflows = Array.from({ length: monthCount }, () => Math.floor(Math.random() * 1000));
 const costs = Array.from({ length: monthCount }, (_, i) =>
-  Math.floor(cashflows[i] * (0.9 + Math.random() * 0.2)),
+  Math.floor(cashflows[i]! * (0.9 + Math.random() * 0.2)),
 );
 
 const data = {
@@ -50,7 +73,7 @@ const data = {
   ],
 };
 
-const options: ChartOptions<"line"> = {
+const options = computed<ChartOptions<"line">>(() => ({
   responsive: true,
   maintainAspectRatio: false,
 
@@ -58,11 +81,19 @@ const options: ChartOptions<"line"> = {
     x: {
       ticks: {
         font: { size: 14 },
+        color: chartColors.value.text,
+      },
+      grid: {
+        color: chartColors.value.grid,
       },
     },
     y: {
       ticks: {
         font: { size: 14 },
+        color: chartColors.value.text,
+      },
+      grid: {
+        color: chartColors.value.grid,
       },
     },
   },
@@ -74,12 +105,17 @@ const options: ChartOptions<"line"> = {
     legend: {
       labels: {
         font: { size: 14 },
+        color: chartColors.value.text,
       },
     },
     tooltip: {
+      backgroundColor: chartColors.value.tooltipBackground,
       titleFont: { size: 14 },
+      titleColor: chartColors.value.text,
       bodyFont: { size: 14 },
+      bodyColor: chartColors.value.text,
       footerFont: { size: 14 },
+      footerColor: chartColors.value.text,
       callbacks: {
         label(context) {
           const value = context.parsed.y;
@@ -89,7 +125,7 @@ const options: ChartOptions<"line"> = {
       },
     },
   },
-};
+}));
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 </script>

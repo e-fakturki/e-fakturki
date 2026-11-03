@@ -1,4 +1,4 @@
-import type { pageInfo } from "../types/ksef";
+import type { PageInfo } from "./common";
 
 export interface GetProductsListRequest {
   company_id: string;
@@ -20,7 +20,7 @@ export interface ProductListItem {
 
 export interface GetProductsListResponse {
   products: ProductListItem[];
-  page_info: pageInfo;
+  page_info: PageInfo;
 }
 
 export interface TaxRate {

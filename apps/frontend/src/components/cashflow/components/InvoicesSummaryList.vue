@@ -1,18 +1,26 @@
 <script setup lang="ts">
+import { Button, DataTable, Column, Tag } from "primevue";
 import { computed, ref } from "vue";
-import DataTable from "primevue/datatable";
-import Column from "primevue/column";
+import {
+  paymentStatus,
+  paymentStatusSeverity,
+  type invoiceTableType,
+} from "../../../lib/types/invoices";
 import { formatPLN } from "../../../lib/utils";
 
 import items from "../../../assets/mock_invoices";
 
+import { incomeTypes, costTypes } from "../../../lib/constants";
+import SaleCostInputDialog from "./AddSalesDialog.vue";
+
 const props = defineProps<{
   selectedYear: number;
   selectedMonth: number | null;
-  type: "sales" | "purchases";
+  type: invoiceTableType;
 }>();
 
 const selectedInvoice = ref(null);
+const showSaleCostInputDialog = ref(false);
 
 function onInvoiceSelect(event: any) {
   selectedInvoice.value = event.data;
@@ -36,23 +44,31 @@ const calculateAgainstPreviousMonth = computed(() => {
 <template>
   <div class="p-div-white flex flex-1 flex-col gap-2">
     <!-- CASHFLOW SUMMARY -->
-    <div class="flex flex-1 flex-col gap-2">
-      <h1 class="text-xl font-bold">
-        {{ type === "sales" ? "Przychód netto" : "Koszty netto" }} {{ formatPLN(cashflow) }}
-      </h1>
-      <div class="flex flex-1 gap-1">
-        <h3 class="text-gray-600">vs poprzedni miesiąc:</h3>
-        <h3
-          :class="
-            (calculateAgainstPreviousMonth.startsWith('+') && props.type === 'sales') ||
-            (calculateAgainstPreviousMonth.startsWith('-') && props.type === 'purchases')
-              ? 'text-green-600'
-              : 'text-red-600'
-          "
-        >
-          {{ calculateAgainstPreviousMonth }}%
-        </h3>
+    <div class="flex justify-between items-center">
+      <div class="flex flex-1 flex-col gap-2">
+        <h1 class="text-xl font-bold">
+          {{ props.type === "sales" ? "Przychód netto" : "Koszty netto" }} {{ formatPLN(cashflow) }}
+        </h1>
+        <div class="flex flex-1 gap-1">
+          <h3 class="p-h3">vs poprzedni miesiąc:</h3>
+          <h3
+            :class="
+              (calculateAgainstPreviousMonth.startsWith('+') && props.type === 'sales') ||
+              (calculateAgainstPreviousMonth.startsWith('-') && props.type === 'purchases')
+                ? 'text-green-600'
+                : 'text-red-600'
+            "
+          >
+            {{ calculateAgainstPreviousMonth }}%
+          </h3>
+        </div>
       </div>
+      <Button
+        icon="pi pi-plus"
+        rounded
+        v-tooltip.bottom="type === 'sales' ? 'Dodaj dane sprzedażowe' : 'Dodaj dane kosztowe'"
+        @click="showSaleCostInputDialog = true"
+      ></Button>
     </div>
     <!-- INVOICES BRIEF TABLE -->
     <div class="p-div-white flex flex-1 flex-col gap-2">
@@ -69,17 +85,44 @@ const calculateAgainstPreviousMonth = computed(() => {
         scrollHeight="400px"
       >
         <Column field="date" header="Data" sortable></Column>
+        <Column field="type" header="Typ" sortable>
+          <template #body="slotProps">
+            {{
+              props.type === "sales"
+                ? incomeTypes[slotProps.data.type]?.label
+                : costTypes[slotProps.data.type]?.label
+            }}
+          </template>
+        </Column>
         <Column
           field="buyer"
           :header="props.type === 'sales' ? 'Klient' : 'Dostawca'"
           sortable
         ></Column>
-        <Column field="sum_gross" header="Suma brutto" sortable>
+        <Column field="sum_net" header="Wartość netto" sortable>
           <template #body="slotProps">
-            {{ formatPLN(slotProps.data.sum_gross) }}
+            {{ formatPLN(slotProps.data.sum_net) }}
+          </template>
+        </Column>
+        <Column field="payment_status" header="Status płatności" sortable>
+          <template #body="slotProps">
+            <div class="flex justify-end">
+              <Tag
+                :value="paymentStatus[slotProps.data.payment_status]"
+                :severity="paymentStatusSeverity[slotProps.data.payment_status]"
+              />
+            </div>
           </template>
         </Column>
       </DataTable>
     </div>
   </div>
+
+  <SaleCostInputDialog
+    :visible="showSaleCostInputDialog"
+    :type="props.type"
+    :loading="false"
+    @update:visible="showSaleCostInputDialog = $event"
+    @cancel="showSaleCostInputDialog = false"
+  />
 </template>

@@ -40,13 +40,13 @@ const costInvoicesNotPayed = Math.floor(Math.random() * 20);
       <div class="flex w-full justify-between">
         <div class="flex flex-col gap-2">
           <div class="flex flex-col gap-1">
-            <h3 class="text- text-gray-600">Ilość faktur sprzedażowych</h3>
+            <h3 class="p-h3">Ilość sprzedaży</h3>
             <h1 class="text-xl font-bold">
               {{ invoiceAmount }}
             </h1>
           </div>
           <div class="flex flex-col gap-1">
-            <h3 class="text-gray-600">Ilość faktur kosztowych</h3>
+            <h3 class="p-h3">Ilość kosztów</h3>
             <h1 class="text-xl font-bold">
               {{ invoiceAmount }}
             </h1>
@@ -54,13 +54,13 @@ const costInvoicesNotPayed = Math.floor(Math.random() * 20);
         </div>
         <div class="flex flex-col gap-2">
           <div class="flex flex-col gap-1">
-            <h3 class="text-gray-600">Średnia wartość netto faktury sprzedażowej</h3>
+            <h3 class="p-h3">Średnia wartość netto sprzedaży</h3>
             <h1 class="text-xl font-bold">
               {{ formatPLN(averageInvoice) }}
             </h1>
           </div>
           <div class="flex flex-col gap-1">
-            <h3 class="text-gray-600">Średnia wartość netto faktury kosztowej</h3>
+            <h3 class="p-h3">Średnia wartość netto kosztu</h3>
             <h1 class="text-xl font-bold">
               {{ formatPLN(averageInvoice) }}
             </h1>
@@ -68,13 +68,13 @@ const costInvoicesNotPayed = Math.floor(Math.random() * 20);
         </div>
         <div class="flex flex-col gap-2">
           <div class="flex flex-col gap-1">
-            <h3 class="text-gray-600">Nowi klienci</h3>
+            <h3 class="p-h3">Nowi klienci</h3>
             <h1 class="text-xl font-bold">
               {{ newClients }}
             </h1>
           </div>
           <div class="flex flex-col gap-1">
-            <h3 class="text-gray-600">Nieaktywni klienci (względem ostatniego miesiąca)</h3>
+            <h3 class="p-h3">Nieaktywni klienci (względem ostatniego miesiąca)</h3>
             <h1 class="text-xl font-bold">
               {{ lostClients }}
             </h1>
@@ -82,13 +82,13 @@ const costInvoicesNotPayed = Math.floor(Math.random() * 20);
         </div>
         <div class="flex flex-col gap-2">
           <div class="flex flex-col gap-1">
-            <h3 class="text-gray-600">Zaległe płatności od klientów</h3>
+            <h3 class="p-h3">Zaległe płatności od klientów</h3>
             <h1 class="text-xl font-bold">
               {{ invoicesNotPayed }}
             </h1>
           </div>
           <div class="flex flex-col gap-1">
-            <h3 class="text-gray-600">Zaległe płatności dla dostawców</h3>
+            <h3 class="p-h3">Zaległe płatności dla dostawców</h3>
             <h1 class="text-xl font-bold">
               {{ costInvoicesNotPayed }}
             </h1>

@@ -3,6 +3,15 @@
 
 :root {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  --chart-text: var(--color-gray-600);
+  --chart-grid: var(--color-gray-300);
+  --chart-tooltip-bg: var(--color-white-900);
+}
+
+.prime-dark-mode {
+  --chart-text: var(--color-gray-400);
+  --chart-grid: var(--color-gray-700);
+  --chart-tooltip-bg: var(--color-neutral-900);
 }
 
 body {
@@ -82,6 +91,12 @@ body {
   border: 1px solid #e4e4e7;
 }
 
+.prime-dark-mode .p-div-grey {
+  background-color: rgb(19, 19, 19);
+  color: #ffffff;
+  border-color: var(--color-neutral-700);
+}
+
 /* PRIME VUE style for DIV white */
 .p-div-white {
   border-radius: 8px;
@@ -89,4 +104,19 @@ body {
   background-color: #ffffff;
   /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
   border: 1px solid #e4e4e7;
+}
+
+.prime-dark-mode .p-div-white {
+  background-color: var(--color-neutral-900);
+  color: #ffffff;
+  border-color: var(--color-neutral-700);
+}
+
+/* PRIME VUE style for h3 text */
+.p-h3 {
+  color: var(--color-gray-600);
+}
+
+.prime-dark-mode .p-h3 {
+  color: var(--color-gray-400);
 }
