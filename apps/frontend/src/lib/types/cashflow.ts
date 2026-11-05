@@ -21,3 +21,10 @@ export interface NewCashflowRecord {
   taxRate: string;
   paymentStatus: string;
 }
+
+export interface MonthlyProfitItem {
+  month_number: number;
+  net_sales: number;
+  net_costs: number;
+  net_profit: number;
+}

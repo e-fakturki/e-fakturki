@@ -11,7 +11,7 @@ export const apiConfig = {
     invoices: "/invoices",
     users: "/users",
     products: "/products",
-    categories: "/categories",
+    cashflow: "/cashflow",
   },
 
   // Other application settings

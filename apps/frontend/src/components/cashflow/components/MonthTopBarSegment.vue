@@ -8,6 +8,7 @@ const props = defineProps<{
   monthNumber: number;
   selectedYear: number;
   selectedMonth: number | null;
+  profit: number | null | undefined;
 }>();
 
 const emit = defineEmits<{
@@ -15,7 +16,7 @@ const emit = defineEmits<{
 }>();
 
 // Random profit for demonstration purposes
-const profit = Math.floor(Math.random() * (5432 + 1389 + 1)) - 1389;
+// const profit = Math.floor(Math.random() * (5432 + 1389 + 1)) - 1389;
 
 const disabled = computed(
   () =>
@@ -45,8 +46,13 @@ function handleSelectMonth() {
   >
     <div class="flex flex-col items-center">
       <div>{{ monthsDictionary[props.monthNumber as keyof typeof monthsDictionary] }}</div>
-      <div :class="profit >= 0 ? 'text-green-500' : 'text-red-500'">
-        {{ disabled ? "" : formatPLN(profit) }}
+      <div
+        :class="{
+          'text-red-500': props.profit != null && props.profit < 0,
+          'text-green-500': props.profit != null && props.profit >= 0,
+        }"
+      >
+        {{ disabled ? "" : props.profit == null ? "-" : formatPLN(props.profit) }}
       </div>
     </div>
   </Button>

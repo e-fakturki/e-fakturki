@@ -1,7 +1,13 @@
 <script setup lang="ts">
-import Button from "primevue/button";
+import { Button, useToast } from "primevue";
+import { useMutation } from "@tanstack/vue-query";
+import { onMounted, ref } from "vue";
+
 import { monthsDictionary } from "../../../lib/constants.ts";
 import MonthTopBarSegment from "./MonthTopBarSegment.vue";
+import { getMonthlyProfitList } from "../../../lib/services/cashflowDashboardService.ts";
+import type { MonthlyProfitItem } from "../../../lib/types/cashflow";
+import { useCurrentUserStore } from "../../../stores/currentUserStore.ts";
 
 const props = defineProps<{
   selectedYear: number;
@@ -12,7 +18,32 @@ const emit = defineEmits<{
   (e: "update:selectedMonth", monthNumber: number | null): void;
 }>();
 
+const toast = useToast();
+const currentUserStore = useCurrentUserStore();
+
+const monthlyProfits = ref<MonthlyProfitItem[]>([]);
+
+const getMonthlyProfitListMutation = useMutation({
+  mutationFn: async () => {
+    const companyId = currentUserStore.getCompanyId;
+    return await getMonthlyProfitList(companyId!, props.selectedYear);
+  },
+
+  onSuccess: (data) => {
+    monthlyProfits.value = data;
+    console.log(monthlyProfits);
+  },
+
+  onError: (error) => {
+    toast.add({ severity: "error", summary: error.response?.data?.detail, life: 5000 });
+  },
+});
+
 const monthNumbers = Object.keys(monthsDictionary).map(Number);
+
+onMounted(() => {
+  getMonthlyProfitListMutation.mutate();
+});
 </script>
 
 <template>
@@ -22,6 +53,7 @@ const monthNumbers = Object.keys(monthsDictionary).map(Number);
         :monthNumber="monthNumber"
         :selectedYear="props.selectedYear"
         :selectedMonth="props.selectedMonth"
+        :profit="monthlyProfits.find((item) => item.month_number === monthNumber)?.net_profit"
         @update:selectedMonth="emit('update:selectedMonth', $event)"
       />
     </template>
