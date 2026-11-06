@@ -40,10 +40,10 @@ const editOrAddText = props.createOrUpdate === "create" ? "Dodaj nową" : "Edytu
 const typeOptions = ref<IncomeType[]>([]);
 const paymentStatusOptions = ref<PaymentStatusType[]>([]);
 const submitDisabled = ref(false);
-const selectedType = ref<IncomeType | null>(null);
-const selectedTaxRate = ref<TaxRate | null>(null);
-const selectedDate = ref<Date | null>(new Date());
-const selectedPaymentStatus = ref<PaymentStatusType | null>(null);
+const selectedType = ref<IncomeType | null | undefined>(null);
+const selectedTaxRate = ref<TaxRate | null | undefined>(null);
+const selectedDate = ref<Date | null | undefined>(new Date());
+const selectedPaymentStatus = ref<PaymentStatusType | null | undefined>(null);
 
 const initialValues = reactive({
   name: "",
