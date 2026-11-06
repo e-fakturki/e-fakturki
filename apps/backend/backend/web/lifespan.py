@@ -79,9 +79,7 @@ async def lifespan_setup(
     _setup_db(app)
     await _create_tables()
 
-    if settings.environment == "prod" or settings.environment == "dev":
-        # app.middleware_stack = app.build_middleware_stack()
-        # elif settings.environment == "dev":
+    if settings.environment in {"prod", "dev"}:
         app.add_middleware(
             CORSMiddleware,
             allow_origins=["*"],

@@ -10,7 +10,11 @@ from backend.db.mappings.invoice_payment_mappings import PaymentStatus
 from backend.schemas.ksef import SalesInvoicesRequest
 from backend.db.models.invoices_brief import InvoicesBriefTable, KsefStatus
 from backend.db.models.invoices_payment import InvoicesPaymentTable
-from backend.schemas.invoices import InvoiceObjectRequest, InvoicesListResponse, PageInfo
+from backend.schemas.invoices import (
+    InvoiceObjectRequest,
+    InvoicesListResponse,
+    PageInfo,
+)
 from backend.db.mappings.invoice_details_mappings import parse_date
 
 
@@ -58,7 +62,9 @@ async def insert_invoice_brief_from_ksef(db: AsyncSession, invoice_data: dict) -
         return None
 
 
-async def insert_invoice_brief_form_invoice_object(db: AsyncSession, invoice_data: InvoiceObjectRequest) -> str:
+async def insert_invoice_brief_form_invoice_object(
+    db: AsyncSession, invoice_data: InvoiceObjectRequest
+) -> str:
     """Extract data from InvoiceObjectRequest and insert it into the table."""
     try:
         invoice_record = InvoicesBriefTable(
@@ -104,7 +110,10 @@ async def insert_invoice_brief_batch(
     db: AsyncSession, invoices: list[dict]
 ) -> list[str]:
     """Inserts a batch of invoices into the database."""
-    return [await insert_invoice_brief_from_ksef(db, invoice) for invoice in invoices["invoices"]]
+    return [
+        await insert_invoice_brief_from_ksef(db, invoice)
+        for invoice in invoices["invoices"]
+    ]
 
 
 async def get_company_invoices_list(

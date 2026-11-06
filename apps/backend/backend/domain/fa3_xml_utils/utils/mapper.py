@@ -7,6 +7,7 @@ import backend.domain.fa3_xml_utils.models.schemat as fa3utils
 from datetime import datetime
 import re
 
+
 def to_tdate(value: str | datetime) -> str:
     """
     Converts various date/datetime formats into FA3 TData format:
@@ -68,8 +69,14 @@ class FA3ObjectMapper:
                     adres_l1=invoice_data.seller_info.address_l1 or None,
                     adres_l2=invoice_data.seller_info.address_l2 or None,
                 ),
-                adres_koresp=self.generate_company_coresp_address_from_invoice_object(True, invoice_data),
-                dane_kontaktowe=[self.generate_company_contact_from_invoice_object(True, invoice_data)],
+                adres_koresp=self.generate_company_coresp_address_from_invoice_object(
+                    True, invoice_data
+                ),
+                dane_kontaktowe=[
+                    self.generate_company_contact_from_invoice_object(
+                        True, invoice_data
+                    )
+                ],
             ),
             podmiot2=fa3utils.Faktura.Podmiot2(
                 dane_identyfikacyjne=fa3utils.Tpodmiot2(
@@ -81,14 +88,20 @@ class FA3ObjectMapper:
                     adres_l1=invoice_data.buyer_info.address_l1 or None,
                     adres_l2=invoice_data.buyer_info.address_l2 or None,
                 ),
-                adres_koresp=self.generate_company_coresp_address_from_invoice_object(False, invoice_data),
-                dane_kontaktowe=[self.generate_company_contact_from_invoice_object(False, invoice_data)],
+                adres_koresp=self.generate_company_coresp_address_from_invoice_object(
+                    False, invoice_data
+                ),
+                dane_kontaktowe=[
+                    self.generate_company_contact_from_invoice_object(
+                        False, invoice_data
+                    )
+                ],
                 # TODO:
                 # Po wdrożeniu Podmiot3 umożliwić oznaczanie kontrahenta jako:
                 # - jednostka podrzędna JST
                 # - członek grupy VAT
                 jst=fa3utils.Podmiot2Jst.VALUE_2,
-                gv=fa3utils.Podmiot2Gv.VALUE_2
+                gv=fa3utils.Podmiot2Gv.VALUE_2,
             ),
             fa=fa3utils.Faktura.Fa(
                 kod_waluty=invoice_data.currency,
@@ -106,29 +119,33 @@ class FA3ObjectMapper:
                     p_18=fa3utils.Twybor12.VALUE_2,
                     p_18_a=fa3utils.Twybor12.VALUE_2,
                     zwolnienie=fa3utils.Faktura.Fa.Adnotacje.Zwolnienie(
-                        choice=[fa3utils.Faktura.Fa.Adnotacje.Zwolnienie.P19N(
-                            value=fa3utils.Twybor1.VALUE_1)
+                        choice=[
+                            fa3utils.Faktura.Fa.Adnotacje.Zwolnienie.P19N(
+                                value=fa3utils.Twybor1.VALUE_1
+                            )
                         ]
-                        ),
+                    ),
                     nowe_srodki_transportu=fa3utils.Faktura.Fa.Adnotacje.NoweSrodkiTransportu(
-                        choice=[fa3utils.Faktura.Fa.Adnotacje.NoweSrodkiTransportu.P22N(
-                            value=fa3utils.Twybor1.VALUE_1)
+                        choice=[
+                            fa3utils.Faktura.Fa.Adnotacje.NoweSrodkiTransportu.P22N(
+                                value=fa3utils.Twybor1.VALUE_1
+                            )
                         ],
-                        ),
+                    ),
                     p_23=fa3utils.Twybor12.VALUE_2,
                     pmarzy=fa3utils.Faktura.Fa.Adnotacje.Pmarzy(
-                        choice=[fa3utils.Faktura.Fa.Adnotacje.Pmarzy.PPmarzyN(
-                            value=fa3utils.Twybor1.VALUE_1)
+                        choice=[
+                            fa3utils.Faktura.Fa.Adnotacje.Pmarzy.PPmarzyN(
+                                value=fa3utils.Twybor1.VALUE_1
+                            )
                         ],
-                    )
-                )
+                    ),
+                ),
             ),
         )
 
     def generate_company_coresp_address_from_invoice_object(
-        self,
-        seller: bool,
-        invoice_data: InvoiceObjectRequest
+        self, seller: bool, invoice_data: InvoiceObjectRequest
     ) -> fa3utils.Tadres | None:
         """Extract company address from invoice object and build a company address object from fa3 structure."""
 
@@ -144,10 +161,12 @@ class FA3ObjectMapper:
         )
 
     def generate_company_contact_from_invoice_object(
-        self,
-        seller: bool,
-        invoice_data: InvoiceObjectRequest
-    ) -> fa3utils.Faktura.Podmiot2.DaneKontaktowe | fa3utils.Faktura.Podmiot1.DaneKontaktowe | None:
+        self, seller: bool, invoice_data: InvoiceObjectRequest
+    ) -> (
+        fa3utils.Faktura.Podmiot2.DaneKontaktowe
+        | fa3utils.Faktura.Podmiot1.DaneKontaktowe
+        | None
+    ):
         """Extract company address from invoice object and build a company address object from fa3 structure."""
 
         info = invoice_data.seller_info if seller else invoice_data.buyer_info
@@ -182,7 +201,10 @@ class FA3ObjectMapper:
                     ],
                 )
             return fa3utils.Faktura.Fa.Platnosc(
-                choice=[fa3utils.Twybor1.VALUE_1, to_tdate(invoice_data.payment.payment_date)],
+                choice=[
+                    fa3utils.Twybor1.VALUE_1,
+                    to_tdate(invoice_data.payment.payment_date),
+                ],
                 forma_platnosci_or_platnosc_inna_or_opis_platnosci=[
                     fa3utils.TformaPlatnosci(invoice_data.payment.payment_type)
                 ],
@@ -220,7 +242,9 @@ class FA3ObjectMapper:
         else:
             raise HTTPException(status_code=422, detail="Wrong payment type.")
 
-    def generate_fa3_invoice_entry_from_invoice_object(self, entry: InvoiceEntryRequest) -> fa3utils.Faktura.Fa.FaWiersz:
+    def generate_fa3_invoice_entry_from_invoice_object(
+        self, entry: InvoiceEntryRequest
+    ) -> fa3utils.Faktura.Fa.FaWiersz:
         """Extract entry info from invoice object and build an entry object from fa3 structure."""
         return fa3utils.Faktura.Fa.FaWiersz(
             nr_wiersza_fa=entry.row_number,
@@ -233,6 +257,11 @@ class FA3ObjectMapper:
             p_12=entry.tax_rate,
         )
 
-    def collect_fa3_entries_to_list(self, invoice_data: InvoiceObjectRequest) -> fa3utils.Faktura.Fa.FaWiersz:
+    def collect_fa3_entries_to_list(
+        self, invoice_data: InvoiceObjectRequest
+    ) -> fa3utils.Faktura.Fa.FaWiersz:
         """Extract entries info from invoice object and create a fa3 entries object"""
-        return [self.generate_fa3_invoice_entry_from_invoice_object(entry) for entry in invoice_data.entries]
+        return [
+            self.generate_fa3_invoice_entry_from_invoice_object(entry)
+            for entry in invoice_data.entries
+        ]

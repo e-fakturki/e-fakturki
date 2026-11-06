@@ -2,26 +2,19 @@ from typing import Any
 
 from ksef_client import KsefClient
 from ksef_client.services import OnlineSessionResult, OnlineSessionWorkflow
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
+
+from dataclasses import dataclass
 
 
 class EncryptionData(BaseModel):
     """Schema needed for type hinting of encryption data used in ksef session."""
 
 
-# class KsefSessionParams(BaseModel):
-#     """Parameters needed to run a ksef session."""
-
-#     workflow: OnlineSessionWorkflow
-#     session: OnlineSessionResult
-
-#     model_config = ConfigDict(arbitrary_types_allowed=True)
-
-from dataclasses import dataclass
-
 @dataclass
 class KsefSessionParams:
     """Parameters needed to run a ksef session."""
+
     workflow: OnlineSessionWorkflow
     session: OnlineSessionResult
 

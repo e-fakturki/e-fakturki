@@ -15,8 +15,8 @@ from backend.db.repositories.company_repository import get_company_nip
 from backend.services.ksef.auth.certificate_auth import (
     authorize_ksef_with_certificate,
     certificate_str_to_temp_file,
-    remove_temp_file
-    )
+    remove_temp_file,
+)
 from backend.services.ksef.auth.ksef_session import open_ksef_session
 from backend.schemas.ksef import KsefInvoiceUploadStatus
 from backend.db.repositories.ksef_credentials_repository import get_auth_certs
@@ -97,7 +97,9 @@ async def check_upload_status(
     raise TimeoutError("Invoice upload status check timeout.")
 
 
-async def post_invoice_to_ksef(db_session: AsyncSession, company_id: str, xml: bytes) -> KsefInvoiceUploadStatus:
+async def post_invoice_to_ksef(
+    db_session: AsyncSession, company_id: str, xml: bytes
+) -> KsefInvoiceUploadStatus:
     """Post invoice to KSEF."""
     company_nip = await get_company_nip(db_session, company_id)
     company_ksef_certs = decrypt_ksef_certs(
@@ -141,7 +143,9 @@ async def post_invoice_to_ksef(db_session: AsyncSession, company_id: str, xml: b
 
             status = None
             for _ in range(60):
-                status = ksef_session_params.session.get_invoice_status(invoice_reference, access_token=access_token)
+                status = ksef_session_params.session.get_invoice_status(
+                    invoice_reference, access_token=access_token
+                )
                 code = int(status.status.code)
                 if code == 200:
                     break
@@ -154,7 +158,7 @@ async def post_invoice_to_ksef(db_session: AsyncSession, company_id: str, xml: b
                 status_code=429,
                 detail="Przekroczono limit 20 żądań na minutę w KSeF. Spróbuj ponownie po 30 sekundach.",
             ) from e
-        except Exception as e:
+        except Exception:
             raise
         finally:
             if ksef_session_params is not None:

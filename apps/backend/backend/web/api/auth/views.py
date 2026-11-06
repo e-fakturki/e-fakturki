@@ -1,10 +1,9 @@
-from fastapi import APIRouter, Depends, Response, Request
+from fastapi import APIRouter, Depends, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 from pwdlib import PasswordHash
 from fastapi import HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 
-from backend.settings import settings
 from backend.db.repositories.users_repository import (
     get_user_by_email,
     create_new_user_record,
@@ -13,7 +12,6 @@ from backend.schemas.auth import UserCreate, UserRead, TokenData, Token
 from backend.web.api.auth.services import (
     verify_password,
     create_access_token,
-    # create_refresh_token,
     get_current_user,
 )
 from backend.db.dependencies import get_db_session
@@ -53,16 +51,6 @@ async def signup_user(
         sub=user.id, email=user.email, name=user.name, last_name=user.last_name
     )
 
-    # refresh_token = create_refresh_token(claims)
-    # response.set_cookie(
-    #     key="refresh_token",
-    #     value=refresh_token,
-    #     httponly=True,
-    #     secure=True,
-    #     samesite="lax",
-    #     max_age=(settings.REFRESH_TOKEN_EXPIRE_MINUTES * 60),
-    # )
-
     return Token(access_token=create_access_token(claims), token_type="bearer")  # noqa: S106
 
 
@@ -89,42 +77,7 @@ async def login_user(
         sub=user.id, email=user.email, name=user.name, last_name=user.last_name
     )
 
-    # refresh_token = create_refresh_token(claims)
-    # response.set_cookie(
-    #     key="refresh_token",
-    #     value=refresh_token,
-    #     httponly=True,
-    #     secure=True,
-    #     samesite="lax",
-    #     max_age=(settings.REFRESH_TOKEN_EXPIRE_MINUTES * 60),
-    # )
-
     return Token(access_token=create_access_token(claims), token_type="bearer")  # noqa: S106
-
-
-# @router.post("/refresh", status_code=200, response_model=Token)
-# async def refresh_access_token(
-#     request: Request,
-#     db_session: AsyncSession = Depends(get_db_session),
-#     current_user: UserRead = Depends(get_current_user),
-# ) -> Token:
-#     """Refresh the access token."""
-
-#     refresh_token = request.cookies.get("refresh_token")
-#     if not refresh_token:
-#         raise HTTPException(
-#             status_code=422,
-#             detail="Refresh token missing.",
-#         )
-
-#     claims = TokenData(
-#         sub=current_user.id,
-#         email=current_user.email,
-#         name=current_user.name,
-#         last_name=current_user.last_name,
-#     )
-
-#     return Token(access_token=create_access_token(claims), token_type="bearer")
 
 
 @router.get("/me", status_code=200, response_model=UserRead)

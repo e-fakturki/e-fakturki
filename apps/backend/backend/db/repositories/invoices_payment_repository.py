@@ -4,7 +4,11 @@ from sqlalchemy import select
 
 from backend.db.mappings.invoice_details_mappings import parse_date
 from backend.schemas.invoices import InvoiceObjectRequest, InvoicePayment
-from backend.db.models.invoices_payment import InvoicesPaymentTable, PaymentStatus, PaymentType
+from backend.db.models.invoices_payment import (
+    InvoicesPaymentTable,
+    PaymentStatus,
+    PaymentType,
+)
 from backend.db.mappings.invoice_payment_mappings import (
     map_fa3_fa_platnosc_to_invoices_payment_table,
 )

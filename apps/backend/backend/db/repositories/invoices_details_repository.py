@@ -28,6 +28,7 @@ async def insert_invoice_details(
         await db.rollback()
         return None
 
+
 async def insert_invoice_details_from_invoice_object(
     db: AsyncSession, invoice_data: InvoiceObjectRequest, invoice_id: str
 ) -> str | None:
@@ -49,7 +50,7 @@ async def insert_invoice_details_from_invoice_object(
             annotation=invoice_data.annotations,
             additional_info=invoice_data.additional_info,
             footer_info=invoice_data.footer_info,
-            footer_registers=invoice_data.footer_registers
+            footer_registers=invoice_data.footer_registers,
         )
 
         db.add(invoice_details_record)
@@ -61,6 +62,7 @@ async def insert_invoice_details_from_invoice_object(
     except IntegrityError:
         await db.rollback()
         raise
+
 
 class InvoiceDetailsResponse(BaseModel):
     """Response model for invoice detials."""

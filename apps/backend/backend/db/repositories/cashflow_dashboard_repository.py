@@ -8,9 +8,7 @@ from backend.schemas.cashflow_dashboard import MontlyProfitItem
 
 
 async def get_monthly_profit_list(
-    db: AsyncSession,
-    company_nip: str,
-    year: int
+    db: AsyncSession, company_nip: str, year: int
 ) -> list[MontlyProfitItem]:
     """Get a list of monthly profits for a company for the year."""
 
@@ -53,11 +51,12 @@ async def get_monthly_profit_list(
             costs.c.net_costs,
             (sales.c.net_sales - costs.c.net_costs).label("net_profit"),
         )
-        .select_from(sales.outerjoin(costs, sales.c.month_number == costs.c.month_number))
+        .select_from(
+            sales.outerjoin(costs, sales.c.month_number == costs.c.month_number)
+        )
         .order_by(sales.c.month_number)
     )
 
     result = await db.execute(query)
-    monthly_profits = [MontlyProfitItem(**month) for month in result.mappings().all()]
 
-    return monthly_profits
+    return [MontlyProfitItem(**month) for month in result.mappings().all()]

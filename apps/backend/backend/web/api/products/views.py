@@ -21,9 +21,8 @@ from backend.db.repositories.product_repository import (
     get_products_list_paginated,
     insert_new_product,
     delete_product_record,
-    update_product_data
+    update_product_data,
 )
-from backend.web.api.products.services import check_and_set_gross_price
 from backend.schemas.auth import UserRead
 from backend.web.api.auth.services import get_current_user
 
@@ -37,7 +36,6 @@ async def create_product(
     db_session: AsyncSession = Depends(get_db_session),
 ) -> ProductCreateResponse:
     """Create a new product record."""
-    # payload = check_and_set_gross_price(payload)
     try:
         return await insert_new_product(db_session, payload)
     except IntegrityError as e:

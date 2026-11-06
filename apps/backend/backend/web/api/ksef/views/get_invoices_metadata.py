@@ -1,11 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from ksef_client import KsefClient, KsefClientOptions, models as m
 from ksef_client.exceptions import KsefRateLimitError
-from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Literal
 
-from backend.db.models.invoices_brief import InvoicesBriefTable
 from backend.db.dependencies import get_db_session
 from backend.db.repositories.company_repository import get_company_nip
 from backend.services.ksef.auth.certificate_auth import (
@@ -49,17 +47,10 @@ async def get_invoices_list(
     key_path = certificate_str_to_temp_file(company_ksef_certs.private_key)
 
     # paylaod creation
-    # request_payload = {
-    #     "subjectType": "Subject1" if invoice_type == "sales" else "Subject2",
-    #     "dateRange": {
-    #         "dateType": "PermanentStorage",
-    #         "from": to_iso(payload.date_from),
-    #         "to": to_iso(payload.date_to, end_of_day=True),
-    #     },
-    # }
-
     request_payload = m.InvoiceQueryFilters(
-        subject_type=m.InvoiceQuerySubjectType("Subject1" if invoice_type == "sales" else "Subject2"),
+        subject_type=m.InvoiceQuerySubjectType(
+            "Subject1" if invoice_type == "sales" else "Subject2"
+        ),
         date_range=m.InvoiceQueryDateRange(
             date_type=m.InvoiceQueryDateType.PERMANENTSTORAGE,
             from_=to_iso(payload.date_from),
@@ -112,4 +103,4 @@ async def get_invoices_list(
         invoices = metadata.to_dict()
         await insert_invoice_brief_batch(db_session, invoices)
 
-    return invoices['invoices']
+    return invoices["invoices"]

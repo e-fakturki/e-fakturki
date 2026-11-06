@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Form, Path, Query, HTTPException
+from fastapi import APIRouter, Depends, Path, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
 
@@ -16,7 +16,11 @@ from backend.schemas.ksef import KsefInvoiceUploadStatus
 router = APIRouter()
 
 
-@router.post("/{company_id}/single_upload", status_code=202, response_model=KsefInvoiceUploadStatus)
+@router.post(
+    "/{company_id}/single_upload",
+    status_code=202,
+    response_model=KsefInvoiceUploadStatus,
+)
 async def upload_invoice_to_ksef(
     payload: InvoiceObjectRequest,
     company_id: str = Path(
@@ -34,20 +38,22 @@ async def upload_invoice_to_ksef(
 
     xml = fa3_xml_builder.build_plain_xml(fa3_object)
 
-    if(fa3_xml_validator.validate(xml)):
+    if fa3_xml_validator.validate(xml):
         xml_bytes = fa3_xml_builder.build_bytes_xml(fa3_object)
         return await post_invoice_to_ksef(db_session, company_id, xml_bytes)
     return None
 
 
-@router.post("/{company_id}/single_xml_upload/{invoice_id}", status_code=202, response_model=KsefInvoiceUploadStatus)
+@router.post(
+    "/{company_id}/single_xml_upload/{invoice_id}",
+    status_code=202,
+    response_model=KsefInvoiceUploadStatus,
+)
 async def upload_invoice_xml_to_ksef(
     company_id: str = Path(
         ..., description="The ID of the company issuing the invoice."
     ),
-    invoice_id: str = Path(
-        ..., description="The ID of the invoice."
-    ),
+    invoice_id: str = Path(..., description="The ID of the invoice."),
     current_user: UserRead = Depends(get_current_user),
     db_session: AsyncSession = Depends(get_db_session),
 ) -> KsefInvoiceUploadStatus:
@@ -58,7 +64,7 @@ async def upload_invoice_xml_to_ksef(
 
         xml = await get_invoice_xml(db_session, invoice_id)
 
-        if(fa3_xml_validator.validate(xml)):
+        if fa3_xml_validator.validate(xml):
             xml_bytes = xml.encode("utf-8")
             return await post_invoice_to_ksef(db_session, company_id, xml_bytes)
         return None

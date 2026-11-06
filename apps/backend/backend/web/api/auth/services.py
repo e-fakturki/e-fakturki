@@ -45,24 +45,6 @@ def create_access_token(data: TokenData, expires_delta: timedelta | None = None)
     return jwt.encode(to_encode, SECRET_KEY.get_secret_value(), algorithm=ALGORITHM)
 
 
-# def create_refresh_token(
-#     data: TokenData, expires_delta: timedelta | None = None
-# ) -> str:
-#     """Create a JWT refresh token with the given data and expiration."""
-#     to_encode = data.model_dump()
-
-#     if expires_delta:
-#         expire = datetime.now(timezone.utc) + expires_delta
-#     else:
-#         expire = datetime.now(timezone.utc) + timedelta(
-#             minutes=REFRESH_TOKEN_EXPIRE_DAYS
-#         )
-
-#     to_encode.update({"exp": expire, "token_type": TokenType.REFRESH})
-
-#     return jwt.encode(to_encode, SECRET_KEY.get_secret_value(), algorithm=ALGORITHM)
-
-
 async def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
     db_session: AsyncSession = Depends(get_db_session),

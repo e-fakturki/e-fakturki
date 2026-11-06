@@ -6,6 +6,7 @@ from ksef_client import KsefEnvironment
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+
 class LogLevel(enum.StrEnum):
     """Possible log levels."""
 

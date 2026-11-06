@@ -86,10 +86,12 @@ class InvoiceResponse(BaseModel):
     footer_registers: str | None
 
 
-# temp models later merg with the upper ones 
+# temp models later merg with the upper ones
+
 
 class InvoiceEntryRequest(BaseModel):
     """Request model for invoice entry."""
+
     row_number: int
     delivery_date: str | None
     name: str
@@ -102,8 +104,10 @@ class InvoiceEntryRequest(BaseModel):
     tax_total: float | None
     gross_total: float
 
+
 class InvoiceCompanyDataRequest(BaseModel):
     """Request model for invoice buyer and seller detals."""
+
     name: str
     nip: str
     krs: str | None
@@ -119,6 +123,7 @@ class InvoiceCompanyDataRequest(BaseModel):
 
 class InvoicePaymentRequest(BaseModel):
     """Request model for invoice payment."""
+
     payment_status: str
     payment_type: int
     payment_date: str | None
@@ -130,6 +135,7 @@ class InvoicePaymentRequest(BaseModel):
 
 class InvoiceObjectRequest(BaseModel):
     """Request model for full invoice with details.+"""
+
     id: str | None
     invoice_number: str
     invoice_type: str

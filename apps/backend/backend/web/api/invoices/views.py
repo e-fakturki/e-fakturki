@@ -7,9 +7,15 @@ from backend.db.repositories.invoice_xml_repository import insert_invoice_xml
 from backend.domain.fa3_xml_utils.utils.builder import FA3XmlBuilder
 from backend.domain.fa3_xml_utils.utils.validator import Fa3XmlValidator
 from backend.domain.fa3_xml_utils.utils.mapper import FA3ObjectMapper
-from backend.db.repositories.invoices_payment_repository import insert_invoice_payment_details_from_invoice_object
-from backend.db.repositories.invoices_entries_repository import insert_invoice_entries_from_invoice_object
-from backend.db.repositories.invoices_details_repository import insert_invoice_details_from_invoice_object
+from backend.db.repositories.invoices_payment_repository import (
+    insert_invoice_payment_details_from_invoice_object,
+)
+from backend.db.repositories.invoices_entries_repository import (
+    insert_invoice_entries_from_invoice_object,
+)
+from backend.db.repositories.invoices_details_repository import (
+    insert_invoice_details_from_invoice_object,
+)
 from backend.db.dependencies import get_db_session
 from backend.db.repositories.company_repository import get_company_nip
 from backend.db.models.invoices_payment import PaymentStatus
@@ -17,7 +23,10 @@ from backend.web.api.invoices.services import get_pretty_invoice_xml
 from backend.schemas.auth import UserRead
 from backend.web.api.auth.services import get_current_user
 from backend.schemas.ksef import SalesInvoicesRequest
-from backend.schemas.invoices import InvoiceObjectRequest, InvoiceResponse, InvoicesListResponse
+from backend.schemas.invoices import (
+    InvoiceObjectRequest,
+    InvoicesListResponse,
+)
 from backend.db.repositories.invoices_brief_repository import (
     get_company_invoices_list,
     insert_invoice_brief_form_invoice_object,
@@ -116,7 +125,9 @@ async def post_invoice(
         brief_id = await insert_invoice_brief_form_invoice_object(db_session, payload)
         await insert_invoice_details_from_invoice_object(db_session, payload, brief_id)
         await insert_invoice_entries_from_invoice_object(db_session, payload, brief_id)
-        await insert_invoice_payment_details_from_invoice_object(db_session, payload, brief_id)
+        await insert_invoice_payment_details_from_invoice_object(
+            db_session, payload, brief_id
+        )
 
         fa3_mapper = FA3ObjectMapper()
         fa3_xml_builder = FA3XmlBuilder()
@@ -126,7 +137,7 @@ async def post_invoice(
 
         xml = fa3_xml_builder.build_plain_xml(fa3_object)
 
-        if(fa3_xml_validator.validate(xml)):
+        if fa3_xml_validator.validate(xml):
             await insert_invoice_xml(db_session, brief_id, xml, sha256_base64=None)
         else:
             raise HTTPException(status_code=422, detail="Invalid XML")
@@ -138,4 +149,3 @@ async def post_invoice(
         ) from e
 
     return brief_id
-
