@@ -37,14 +37,14 @@ function onKsefAuthorize() {
   <div>
     <LoginDialog
       v-model:visible="showLoginForm"
-      @loginSuccess="onLogin"
-      @registerSuccess="onRegister"
+      @login-success="onLogin"
+      @register-success="onRegister"
     />
     <CompanyForm
       v-model:visible="showCompanyForm"
-      createOrUpdate="create"
+      create-or-update="create"
       :user-company="true"
-      :companyInfo="null"
+      :company-info="null"
       :loading="false"
       @success="onAddCompany"
       @cancel="null"

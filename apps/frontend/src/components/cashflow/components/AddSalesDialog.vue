@@ -90,11 +90,11 @@ onMounted(() => {
 <template>
   <Dialog
     :visible="visible"
-    @update:visible="emit('update:visible', $event)"
     modal
     :draggable="false"
     :style="{ width: '60rem', height: '50rem' }"
-    :contentStyle="{ display: 'flex', flexDirection: 'column', minHeight: '0', overflow: 'hidden' }"
+    :content-style="{ display: 'flex', flexDirection: 'column', minHeight: '0', overflow: 'hidden' }"
+    @update:visible="emit('update:visible', $event)"
   >
     <template #header>
       <div class="flex flex-col text-xl font-semibold">
@@ -106,17 +106,17 @@ onMounted(() => {
     <div class="flex flex-1 flex-col min-h-0 overflow-hidden card justify-center pt-2">
       <div class="p-div-grey flex flex-1 min-h-0 min-w-0 flex-col gap-2">
         <DataTable
-          :value="newData"
-          dataKey="id"
           v-model:expanded-rows="expandedRows"
           v-model:selection="recordToEdit"
+          :value="newData"
+          data-key="id"
           selection-mode="single"
+          removable-sort
+          scrollable
+          scroll-height="flex"
+          class="flex-1 min-h-0"
           @row-select="onRowSelect"
           @row-unselect="onRowUnselect"
-          removableSort
-          scrollable
-          scrollHeight="flex"
-          class="flex-1 min-h-0"
         >
           <template #header>
             <div class="flex justify-between items-center text-l font-semibold">
@@ -126,8 +126,8 @@ onMounted(() => {
               <Button
                 label="Dodaj wiersz"
                 icon="pi pi-plus"
-                @click="newRecordDialog = true"
                 :disabled="getTaxRatesMutation.isPending.value"
+                @click="newRecordDialog = true"
               />
             </div>
           </template>
@@ -166,8 +166,9 @@ onMounted(() => {
                     deleteRecordDialog = true;
                   }
                 "
-              /> </template
-          ></Column>
+              />
+            </template>
+          </Column>
           <template #expansion="slotProps">
             <div class="flex flex-1 gap-4 pl-15">
               <div class="flex min-w-0 flex-1 flex-col">
@@ -221,9 +222,9 @@ onMounted(() => {
   <NewSaleInputDialog
     :visible="newRecordDialog"
     :type="props.type"
-    createOrUpdate="create"
-    :recordInfo="null"
-    :taxRates="taxRates"
+    create-or-update="create"
+    :record-info="null"
+    :tax-rates="taxRates"
     :loading="getTaxRatesMutation.isPending.value"
     @update:visible="newRecordDialog = $event"
     @cancel="newRecordDialog = false"
@@ -234,9 +235,9 @@ onMounted(() => {
   <NewSaleInputDialog
     :visible="editRecordDialog"
     :type="props.type"
-    createOrUpdate="update"
-    :recordInfo="recordToEdit"
-    :taxRates="taxRates"
+    create-or-update="update"
+    :record-info="recordToEdit"
+    :tax-rates="taxRates"
     :loading="getTaxRatesMutation.isPending.value"
     @update:visible="editRecordDialog = $event"
     @cancel="onRowUnselect"
@@ -246,8 +247,8 @@ onMounted(() => {
   <!-- Record delete dialog -->
   <DeleteConfirmDialog
     v-model:visible="deleteRecordDialog"
-    :deletionObjectName="recordToEdit?.name"
-    deleteObjectString="rekord"
+    :deletion-object-name="recordToEdit?.name"
+    delete-object-string="rekord"
     @confirm="deleteRecord(recordToEdit)"
     @cancel="deleteRecordDialog = false"
   />

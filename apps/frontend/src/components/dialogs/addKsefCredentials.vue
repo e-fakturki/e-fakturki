@@ -104,10 +104,10 @@ const companyName = computed(() => currentUserStore.getCompanyName);
 <template>
   <Dialog
     :visible="true"
-    @update:visible="emit('update:visible', $event)"
     modal
     :draggable="false"
     :style="{ width: '40rem' }"
+    @update:visible="emit('update:visible', $event)"
   >
     <template #header>
       <AppLogo />
@@ -127,43 +127,45 @@ const companyName = computed(() => currentUserStore.getCompanyName);
       </a>
     </span>
     <div class="card flex justify-center">
-      <Form :resolver @submit="onFormSubmit" class="flex flex-col gap-4 w-full sm:w-100">
+      <Form :resolver class="flex flex-col gap-4 w-full sm:w-100" @submit="onFormSubmit">
         <FileInput
-          acceptableFiles=".pfx,.crt,.cer"
+          acceptable-files=".pfx,.crt,.cer"
           credentials
-          :maxFileSize="1000000"
-          invalidFileTypeMessage="Błędny typ pliku. (Akceptowalne: *.crt, *.pfx, *.cer)"
-          dragAndDropMessage="Przeciągnij i upuść certyfikat uwierzytelniający. (np. plik auth.crt)"
-          fileIcon="pi-file-check"
+          :max-file-size="1000000"
+          invalid-file-type-message="Błędny typ pliku. (Akceptowalne: *.crt, *.pfx, *.cer)"
+          drag-and-drop-message="Przeciągnij i upuść certyfikat uwierzytelniający. (np. plik auth.crt)"
+          file-icon="pi-file-check"
           @file-selected="handleSelectCert"
           @file-removed="handleClearCert"
         />
         <FileInput
-          acceptableFiles=".key"
+          acceptable-files=".key"
           credentials
-          :maxFileSize="1000000"
-          invalidFileTypeMessage="Błędny typ pliku. (Akceptowalne: *.key)"
-          dragAndDropMessage="Przeciągnij i upuść klucz dla certyfikatu uwierzytelniającego. (np. plik
+          :max-file-size="1000000"
+          invalid-file-type-message="Błędny typ pliku. (Akceptowalne: *.key)"
+          drag-and-drop-message="Przeciągnij i upuść klucz dla certyfikatu uwierzytelniającego. (np. plik
                 auth.key)"
-          fileIcon="pi-key"
+          file-icon="pi-key"
           @file-selected="handleSelectKey"
           @file-removed="handleClearKey"
         />
-        <FormField v-slot="$field" name="ksef_password" class="flex flex-col gap-1" initialValue="">
+        <FormField v-slot="$field" name="ksef_password" class="flex flex-col gap-1" initial-value="">
           <FloatLabel variant="on">
             <Password
               v-bind="$field.props"
               id="password_input"
               type="text"
               :feedback="false"
-              toggleMask
+              toggle-mask
               fluid
             />
             <label for="password_input">Hasło do klucza uwierzytelniającego KSeF</label>
           </FloatLabel>
-          <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-            $field.error?.message
-          }}</Message>
+          <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+            {{
+              $field.error?.message
+            }}
+          </Message>
         </FormField>
         <Button
           type="submit"

@@ -139,17 +139,16 @@ onMounted(() => {
 
 <template>
   <DataTable
+    v-model:expanded-rows="expandedRows"
     :value="sortedProducts"
     :loading="getProductsMutation.isPending.value"
-    dataKey="id"
-    v-model:expanded-rows="expandedRows"
+    data-key="id"
     paginator
     paginator-position="bottom"
     :rows="pageSize"
     :first="first"
     :rows-per-page-options="[5, 10, 15, 25, 50]"
     :total-records="totalRecords"
-    @page="onPageChange"
     lazy
     scroll-height="flex"
     scrollable
@@ -163,15 +162,16 @@ onMounted(() => {
         }),
       },
     }"
+    @page="onPageChange"
   >
     <template #header>
       <div class="flex flex-wrap items-center justify-between gap-2">
         <span class="text-xl font-bold">Lista Produktów</span>
         <div class="flex gap-2 items-center">
           <Button
+            v-tooltip.bottom="'Dodaj nowy produkt'"
             icon="pi pi-plus"
             rounded
-            v-tooltip.bottom="'Dodaj nowy produkt'"
             @click="
               () => {
                 addProductDialog = true;
@@ -179,9 +179,9 @@ onMounted(() => {
             "
           ></Button>
           <Button
+            v-tooltip.bottom="'Wyczysć filtry'"
             icon="pi pi-filter-slash"
             outlined
-            v-tooltip.bottom="'Wyczysć filtry'"
             @click="refreshList"
           ></Button>
           <FloatLabel variant="on">
@@ -191,13 +191,13 @@ onMounted(() => {
               </InputIcon>
               <InputText
                 id="on_label"
-                maxlength="64"
                 v-model="searchFilters"
                 v-tooltip.bottom="
                   'Wyszukaj produkt po nazwie, opisie, GTIN. (Zatwierdź wyszukiwanie enterem)'
                 "
-                @keydown.enter="onSeachSubmit"
+                maxlength="64"
                 :disabled="getProductsMutation.isPending.value"
+                @keydown.enter="onSeachSubmit"
               />
               <label for="on_label">Wyszukaj produkt</label>
             </IconField>
@@ -235,10 +235,9 @@ onMounted(() => {
         <span
           v-if="slotProps.data.tax_rate"
           v-tooltip.right="taxRateMap.get(slotProps.data.tax_rate)?.hint_text"
-          >{{
-            taxRateMap.get(slotProps.data.tax_rate)?.display_text || slotProps.data.tax_rate
-          }}</span
-        >
+        >{{
+          taxRateMap.get(slotProps.data.tax_rate)?.display_text || slotProps.data.tax_rate
+        }}</span>
         <span v-else>-</span>
       </template>
     </Column>
@@ -273,8 +272,9 @@ onMounted(() => {
               deleteProductDialog = true;
             }
           "
-        /> </template
-    ></Column>
+        />
+      </template>
+    </Column>
     <template #expansion="slotProps">
       <div class="flex flex-row gap-40">
         <div class="flex flex-col gap-2 pl-18">
@@ -287,9 +287,9 @@ onMounted(() => {
   <!-- Product create dialog -->
   <ProductForm
     v-model:visible="addProductDialog"
-    createOrUpdate="create"
-    :productInfo="null"
-    :taxRates="taxRates"
+    create-or-update="create"
+    :product-info="null"
+    :tax-rates="taxRates"
     :loading="getProductsMutation.isPending.value"
     @success="
       () => {
@@ -303,9 +303,9 @@ onMounted(() => {
   <!-- Product edit dialog -->
   <ProductForm
     v-model:visible="editProductDialog"
-    createOrUpdate="update"
-    :productInfo="productToEdit"
-    :taxRates="taxRates"
+    create-or-update="update"
+    :product-info="productToEdit"
+    :tax-rates="taxRates"
     :loading="getProductsMutation.isPending.value"
     @success="
       () => {
@@ -319,8 +319,8 @@ onMounted(() => {
   <!-- Product delete dialog -->
   <DeleteConfirmDialog
     v-model:visible="deleteProductDialog"
-    :deletionObjectName="productToEdit?.name"
-    deleteObjectString="produkt"
+    :deletion-object-name="productToEdit?.name"
+    delete-object-string="produkt"
     :loading="deleteProductMutation.isPending.value"
     @confirm="deleteProductMutation.mutate(productToEdit)"
     @cancel="deleteProductDialog = false"

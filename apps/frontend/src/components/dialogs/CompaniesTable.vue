@@ -148,18 +148,17 @@ onMounted(() => {
 
 <template>
   <DataTable
+    v-model:expanded-rows="expandedRows"
     :value="sortedCompanies"
     :loading="getCompaniesMutation.isPending.value"
-    dataKey="id"
+    data-key="id"
     :frozen-value="lockedCompany"
-    v-model:expanded-rows="expandedRows"
     paginator
     paginator-position="bottom"
     :rows="pageSize"
     :first="first"
     :rows-per-page-options="[5, 10, 15, 25, 50]"
     :total-records="totalRecords"
-    @page="onPageChange"
     lazy
     scroll-height="flex"
     scrollable
@@ -176,21 +175,22 @@ onMounted(() => {
         }),
       },
     }"
+    @page="onPageChange"
   >
     <template #header>
       <div class="flex flex-wrap items-center justify-between gap-2">
         <span class="text-xl font-bold">Lista Firm</span>
         <div class="flex gap-2 items-center">
           <Button
+            v-tooltip.bottom="'Dodaj nową firmę'"
             icon="pi pi-plus"
             rounded
-            v-tooltip.bottom="'Dodaj nową firmę'"
             @click="addNewCompany"
           ></Button>
           <Button
+            v-tooltip.bottom="'Wyczysć filtry'"
             icon="pi pi-filter-slash"
             outlined
-            v-tooltip.bottom="'Wyczysć filtry'"
             @click="removeFilters"
           ></Button>
           <FloatLabel variant="on">
@@ -200,13 +200,13 @@ onMounted(() => {
               </InputIcon>
               <InputText
                 id="on_label"
-                maxlength="64"
                 v-model="searchFilters"
                 v-tooltip.bottom="
                   'Wyszukaj firmę po nazwie, NIP, adresie, e-mailu lub numerze telefonu. (Zatwierdź wyszukiwanie enterem)'
                 "
-                @keydown.enter="onSeachSubmit"
+                maxlength="64"
                 :disabled="getCompaniesMutation.isPending.value"
+                @keydown.enter="onSeachSubmit"
               />
               <label for="on_label">Wyszukaj firmę</label>
             </IconField>
@@ -272,10 +272,11 @@ onMounted(() => {
           icon="pi pi-trash"
           variant="outlined"
           severity="danger"
-          @click="confirmDeleteCompany(slotProps.data)"
           :disabled="slotProps.data.id === currentUserStore.getCompanyId"
-        /> </template
-    ></Column>
+          @click="confirmDeleteCompany(slotProps.data)"
+        />
+      </template>
+    </Column>
     <template #expansion="slotProps">
       <div class="flex flex-row gap-40">
         <div class="flex flex-col gap-2 pl-18">
@@ -307,9 +308,9 @@ onMounted(() => {
   <!-- Company create dialog -->
   <CompanyForm
     v-model:visible="addCompanyDialog"
-    createOrUpdate="create"
+    create-or-update="create"
     :user-company="false"
-    :companyInfo="null"
+    :company-info="null"
     :loading="getCompaniesMutation.isPending.value"
     @success="
       () => {
@@ -323,9 +324,9 @@ onMounted(() => {
   <!-- Company edit dialog -->
   <CompanyForm
     v-model:visible="editCompanyDialog"
-    createOrUpdate="update"
+    create-or-update="update"
     :user-company="companyToEdit?.id === currentUserStore.getCompanyId"
-    :companyInfo="companyToEdit"
+    :company-info="companyToEdit"
     :loading="getCompaniesMutation.isPending.value"
     @success="
       () => {
@@ -341,8 +342,8 @@ onMounted(() => {
   <!-- Company delete dialog -->
   <DeleteConfirmDialog
     v-model:visible="deleteCompanyDialog"
-    :deletionObjectName="companyToEdit?.name"
-    deleteObjectString="firmę"
+    :deletion-object-name="companyToEdit?.name"
+    delete-object-string="firmę"
     :loading="deleteCompanyMutation.isPending.value"
     @confirm="deleteCompanyMutation.mutate(companyToEdit)"
     @cancel="deleteCompanyDialog = false"

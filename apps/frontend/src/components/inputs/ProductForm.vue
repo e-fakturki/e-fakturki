@@ -19,7 +19,7 @@ import z from "zod";
 import type { CreateOrUpdate } from "../../lib/types/company";
 import type { ProductListItem, TaxRate } from "../../lib/types/products";
 import { createProduct, updateProduct } from "../../lib/services/productService";
-import { calculateGrossPrice, calculateNetPrice, verifyNetVsGrossPrice } from "../../lib/utils";
+import { calculateGrossPrice, verifyNetVsGrossPrice } from "../../lib/utils";
 
 const props = withDefaults(
   defineProps<{
@@ -191,10 +191,10 @@ watch(
 <template>
   <Dialog
     :visible="visible"
-    @update:visible="emit('update:visible', $event)"
     modal
     :draggable="false"
     :style="{ width: '40rem' }"
+    @update:visible="emit('update:visible', $event)"
   >
     <template #header>
       <div v-if="props.createOrUpdate === 'update'" class="flex flex-col text-xl font-semibold">
@@ -208,11 +208,10 @@ watch(
     </template>
     <div class="card flex justify-center pt-2">
       <Form
-        :initialValues="initialValues"
-        v-slot="$form"
+        :initial-values="initialValues"
         :resolver="resolver"
-        @submit="onFormSubmit"
         class="flex flex-col gap-4 w-full items-center sm:w-150"
+        @submit="onFormSubmit"
       >
         <div class="flex gap-4 w-full">
           <div class="flex flex-col gap-4 w-full">
@@ -221,36 +220,36 @@ watch(
                 <InputText v-bind="$field.props" id="name_input" type="text" fluid />
                 <label for="name_input">Nazwa produktu</label>
               </FloatLabel>
-              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-                $field.error?.message
-              }}</Message>
+              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                {{ $field.error?.message }}
+              </Message>
             </FormField>
             <FormField v-slot="$field" name="gtin" class="flex flex-col gap-1">
               <FloatLabel variant="on">
                 <InputText v-bind="$field.props" id="gtin_input" type="text" fluid />
                 <label for="gtin_input">GTIN (Opcjonalnie)</label>
               </FloatLabel>
-              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-                $field.error?.message
-              }}</Message>
+              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                {{ $field.error?.message }}
+              </Message>
             </FormField>
             <FormField v-slot="$field" name="description" class="flex flex-col gap-1">
               <FloatLabel variant="on">
                 <InputText v-bind="$field.props" id="description_input" type="text" fluid />
                 <label for="description_input">Opis produktu (Opcjonalnie)</label>
               </FloatLabel>
-              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-                $field.error?.message
-              }}</Message>
+              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                {{ $field.error?.message }}
+              </Message>
             </FormField>
             <FormField v-slot="$field" name="unit" class="flex flex-col gap-1">
               <FloatLabel variant="on">
                 <InputText v-bind="$field.props" id="unit_input" type="text" fluid />
                 <label for="unit_input">Jednostka miary</label>
               </FloatLabel>
-              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-                $field.error?.message
-              }}</Message>
+              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                {{ $field.error?.message }}
+              </Message>
             </FormField>
           </div>
           <div class="flex flex-col gap-4 w-full">
@@ -258,8 +257,8 @@ watch(
               <FloatLabel variant="on">
                 <InputNumber
                   v-bind="$field.props"
-                  v-model="initialValues.netPrice"
                   id="netPrice_input"
+                  v-model="initialValues.netPrice"
                   mode="currency"
                   currency="PLN"
                   locale="pl-PL"
@@ -268,17 +267,17 @@ watch(
                 />
                 <label for="netPrice_input">Cena netto</label>
               </FloatLabel>
-              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-                $field.error?.message
-              }}</Message>
+              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                {{ $field.error?.message }}
+              </Message>
             </FormField>
             <FloatLabel variant="on">
               <Select
-                v-model="selectedTaxRate"
                 id="taxRate_select"
+                v-model="selectedTaxRate"
                 :options="taxRates"
                 class="h-10.5"
-                emptyMessage="Brak opcji do wyboru"
+                empty-message="Brak opcji do wyboru"
                 fluid
                 @change="onTaxRateChange"
               >
@@ -309,8 +308,8 @@ watch(
               <FloatLabel variant="on">
                 <InputNumber
                   v-bind="$field.props"
-                  v-model="initialValues.grossPrice"
                   id="grossPrice_input"
+                  v-model="initialValues.grossPrice"
                   mode="currency"
                   currency="PLN"
                   locale="pl-PL"
@@ -319,9 +318,9 @@ watch(
                 />
                 <label for="grossPrice_input">Cena brutto</label>
               </FloatLabel>
-              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-                $field.error?.message
-              }}</Message>
+              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                {{ $field.error?.message }}
+              </Message>
             </FormField>
           </div>
         </div>

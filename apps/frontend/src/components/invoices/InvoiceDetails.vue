@@ -179,16 +179,16 @@ watch(
   <Dialog
     :visible="visible"
     position="bottom"
+    modal
+    maximizable
+    :style="{ width: '60%' }"
+    :loading="getInvoiceDetailsMutation.isPending.value"
     @update:visible="emit('update:visible', $event)"
     @hide="
       () => {
         invoiceData.value = null;
       }
     "
-    modal
-    maximizable
-    :style="{ width: '60%' }"
-    :loading="getInvoiceDetailsMutation.isPending.value"
   >
     <!-- header -->
     <template #header>
@@ -204,21 +204,21 @@ watch(
         <div v-if="!props.invoice_creation">
           <Button
             v-if="invoiceData.ksef_status === 'accepted' || invoiceData.ksef_status === 'rejected'"
+            v-tooltip.top="'Szczegóły'"
             icon="pi pi-info-circle"
             outlined
-            v-tooltip.top="'Szczegóły'"
-            @click="toggleKsefPopup"
             :loading="postInvoiceToKsefMutation.isPending.value"
             :disabled="postInvoiceToKsefMutation.isPending.value"
+            @click="toggleKsefPopup"
           ></Button>
           <Button
             v-if="invoiceData.ksef_status === 'not_sent' || invoiceData.ksef_status === 'rejected'"
+            v-tooltip.top="'Wyślij do KSeF'"
             icon="pi pi-send"
             outlined
-            v-tooltip.top="'Wyślij do KSeF'"
-            @click="postInvoiceToKsefMutation.mutate"
             :loading="postInvoiceToKsefMutation.isPending.value"
             :disabled="postInvoiceToKsefMutation.isPending.value"
+            @click="postInvoiceToKsefMutation.mutate"
           ></Button>
         </div>
       </div>
@@ -256,12 +256,12 @@ watch(
           :class="props.invoice_type === 'sales' ? 'justify-end pr-2' : 'justify-start pl-2'"
         >
           <Button
+            v-tooltip.top="'Zapisz firmę w bazie danych'"
             icon="pi pi-save"
             outlined
-            v-tooltip.top="'Zapisz firmę w bazie danych'"
-            @click="saveCompanyMutation.mutate"
             :loading="saveCompanyMutation.isPending.value"
             :disabled="saveCompanyMutation.isPending.value"
+            @click="saveCompanyMutation.mutate"
           ></Button>
         </div>
         <Card>
@@ -359,9 +359,9 @@ watch(
       <!-- summary -->
       <div class="mt-4">
         <Card>
-          <template #title
-            >Do zapłaty:&nbsp;&nbsp;{{ formatPLN(invoiceData?.gross_total || 0) }}</template
-          >
+          <template #title>
+            Do zapłaty:&nbsp;&nbsp;{{ formatPLN(invoiceData?.gross_total || 0) }}
+          </template>
           <template #content>
             <!-- <span>{{ "słownie: " }}</span> -->
           </template>
@@ -422,8 +422,8 @@ watch(
               v-if="!props.invoice_creation"
               v-model="invoiceData.payment.payment_status"
               :options="paymentStatusMapForComponents"
-              optionLabel="label"
-              optionValue="value"
+              option-label="label"
+              option-value="value"
               placeholder="Wybierz status płatności"
             >
               <template #option="slotProps">
@@ -480,7 +480,7 @@ watch(
       </div> -->
     </div>
 
-    <template #footer v-if="invoiceData">
+    <template v-if="invoiceData" #footer>
       <Button
         label="Pobierz XML"
         icon="pi pi-download"

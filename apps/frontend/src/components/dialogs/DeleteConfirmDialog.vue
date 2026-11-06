@@ -17,11 +17,11 @@ const emit = defineEmits(["update:visible", "confirm", "cancel"]);
 <template>
   <Dialog
     :visible="visible"
-    @update:visible="emit('update:visible', $event)"
     :draggable="false"
     :style="{ width: '450px' }"
     :header="title || 'Potwierdź'"
     modal
+    @update:visible="emit('update:visible', $event)"
   >
     <div class="flex items-center gap-4">
       <i class="pi pi-exclamation-triangle text-3xl!" />
@@ -34,18 +34,18 @@ const emit = defineEmits(["update:visible", "confirm", "cancel"]);
       <Button
         label="Nie"
         icon="pi pi-times"
-        @click="emit('cancel')"
         severity="secondary"
         variant="text"
         :disabled="loading"
+        @click="emit('cancel')"
       />
       <Button
         label="Tak"
         icon="pi pi-check"
-        @click="emit('confirm')"
         severity="danger"
         outlined
         :disabled="loading"
+        @click="emit('confirm')"
       />
     </template>
   </Dialog>

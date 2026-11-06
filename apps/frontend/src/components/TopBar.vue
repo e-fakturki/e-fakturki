@@ -39,7 +39,7 @@ const userName = computed(() => currentUserStore.getFullName);
       <div class="flex items-center gap-4">
         <Select
           :placeholder="companyName ?? 'Wybierz firmę'"
-          emptyMessage="Brak opcji do wyboru"
+          empty-message="Brak opcji do wyboru"
           disabled
         />
         <p>{{ userName ? userName : "Zaloguj się" }}</p>

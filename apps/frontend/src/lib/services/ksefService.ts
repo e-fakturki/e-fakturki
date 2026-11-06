@@ -38,60 +38,42 @@ export const refreshInvoiceListFromKsef = async (
   data: getInvoicesListRequest,
   invoiceType: InvoiceType,
 ): Promise<string[]> => {
-  console.log(data);
-  try {
-    const response = await axios.post<string[]>(baseUrl + "/invoices", data, {
-      params: {
-        invoice_type: invoiceType,
-      },
-    });
+  const response = await axios.post<string[]>(baseUrl + "/invoices", data, {
+    params: {
+      invoice_type: invoiceType,
+    },
+  });
 
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  return response.data;
 };
 
 export const getInvoiceDetails = async (
   company_id: number,
   invoice_id: string,
 ): Promise<InvoiceObject> => {
-  try {
-    const response = await axios.post<InvoiceObject>(
-      `${baseUrl}/single_invoice_download/${company_id}/${invoice_id}`,
-    );
-    console.log(response.data);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await axios.post<InvoiceObject>(
+    `${baseUrl}/single_invoice_download/${company_id}/${invoice_id}`,
+  );
+  return response.data;
 };
 
 export const postInvoiceToKsef = async (
   data: InvoiceObject,
   companyId: string,
 ): Promise<postInvoiceToKsefResponse> => {
-  try {
-    const response = await axios.post<postInvoiceToKsefResponse>(
-      `${baseUrl}/${companyId}/single_upload`,
-      data,
-    );
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await axios.post<postInvoiceToKsefResponse>(
+    `${baseUrl}/${companyId}/single_upload`,
+    data,
+  );
+  return response.data;
 };
 
 export const postInvoiceXmlToKsef = async (
   companyId: string,
   invoiceId: string,
 ): Promise<postInvoiceToKsefResponse> => {
-  try {
-    const response = await axios.post<postInvoiceToKsefResponse>(
-      `${baseUrl}/${companyId}/single_xml_upload/${invoiceId}`,
-    );
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await axios.post<postInvoiceToKsefResponse>(
+    `${baseUrl}/${companyId}/single_xml_upload/${invoiceId}`,
+  );
+  return response.data;
 };

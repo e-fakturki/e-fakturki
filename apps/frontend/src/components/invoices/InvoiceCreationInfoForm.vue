@@ -75,13 +75,13 @@ watch(
 
     <Form ref="formRef" :resolver="resolver" class="flex flex-1 gap-4">
       <!-- INVOICE NUMBER -->
-      <FormField v-slot="$field" initialValue="" name="invoiceNumber" class="sm:w-100">
+      <FormField v-slot="$field" initial-value="" name="invoiceNumber" class="sm:w-100">
         <FloatLabel variant="on">
           <InputText
             v-bind="$field.props"
+            id="invoiceNumber_input"
             v-model="$field.value"
             :disabled="props.disabled"
-            id="invoiceNumber_input"
             type="text"
             fluid
           />
@@ -95,7 +95,7 @@ watch(
       <!-- INVOICE DATE -->
       <FormField
         v-slot="$field"
-        :initialValue="initialInvoiceDate"
+        :initial-value="initialInvoiceDate"
         name="invoiceDate"
         class="sm:w-100"
       >
@@ -104,24 +104,24 @@ watch(
             v-bind="$field.props"
             v-model="$field.value"
             :disabled="props.disabled"
-            inputId="invoiceDate"
-            dateFormat="yy/mm/dd"
+            input-id="invoiceDate"
+            date-format="yy/mm/dd"
             fluid
-            showIcon
-            iconDisplay="input"
+            show-icon
+            icon-display="input"
           />
           <label for="invoiceDate">Data wystawienia</label>
         </FloatLabel>
       </FormField>
 
       <!-- ISSUE PLACE -->
-      <FormField v-slot="$field" initialValue="" name="issuePlace" class="sm:w-100">
+      <FormField v-slot="$field" initial-value="" name="issuePlace" class="sm:w-100">
         <FloatLabel variant="on">
           <InputText
             v-bind="$field.props"
+            id="issuePlace_input"
             v-model="$field.value"
             :disabled="props.disabled"
-            id="issuePlace_input"
             type="text"
             fluid
           />

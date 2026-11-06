@@ -68,40 +68,24 @@ export const updateCompany = async (data: CompanyReadUpdate): Promise<CompanyCre
 };
 
 export const getUserCompany = async (): Promise<UserCompanyResponse> => {
-  try {
-    const response = await axios.get<UserCompanyResponse>(`${baseUrl}/me`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await axios.get<UserCompanyResponse>(`${baseUrl}/me`);
+  return response.data;
 };
 
 export const getCompaniesList = async (data: PaginationRequest): Promise<CompaniesListResponse> => {
-  try {
-    const response = await axios.get<CompaniesListResponse>(
-      `${baseUrl}/list?search_string=${data.search_string ? data.search_string : ""}&page_size=${data.page_size}&page_offset=${data.page_offset}`,
-    );
+  const response = await axios.get<CompaniesListResponse>(
+    `${baseUrl}/list?search_string=${data.search_string ? data.search_string : ""}&page_size=${data.page_size}&page_offset=${data.page_offset}`,
+  );
 
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  return response.data;
 };
 
 export const deleteCompany = async (company_id: string): Promise<string> => {
-  try {
-    const response = await axios.delete<string>(`${baseUrl}/${company_id}`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await axios.delete<string>(`${baseUrl}/${company_id}`);
+  return response.data;
 };
 
 export const getIsoCountries = async (): Promise<IsoCountries[]> => {
-  try {
-    const response = await axios.get<IsoCountries[]>(`${baseUrl}/iso-countries`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await axios.get<IsoCountries[]>(`${baseUrl}/iso-countries`);
+  return response.data;
 };

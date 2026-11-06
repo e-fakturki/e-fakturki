@@ -136,7 +136,7 @@ watch(
       <!-- PAYMENT STATUS -->
       <FormField
         v-slot="$field"
-        initialValue="unpaid"
+        initial-value="unpaid"
         name="paymentStatus"
         class="flex flex-col gap-1"
       >
@@ -144,12 +144,12 @@ watch(
           <Select
             v-bind="$field.props"
             :options="paymentStatusMapForComponents"
-            optionLabel="label"
-            optionValue="value"
+            option-label="label"
+            option-value="value"
             :disabled="props.disabled"
-            :optionDisabled="(option) => option.value === 'partial'"
-            @change="onSelectPaymentStatus"
+            :option-disabled="(option) => option.value === 'partial'"
             fluid
+            @change="onSelectPaymentStatus"
           >
             <template #option="slotProps">
               <Tag
@@ -170,68 +170,76 @@ watch(
           </Select>
           <label for="name_input">Status płatności</label>
         </FloatLabel>
-        <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-          $field.error?.message
-        }}</Message>
+        <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+          {{
+            $field.error?.message
+          }}
+        </Message>
 
         <!-- PAYMENT TYPE -->
       </FormField>
-      <FormField v-slot="$field" :initialValue="1" name="paymentType" class="flex flex-col gap-1">
+      <FormField v-slot="$field" :initial-value="1" name="paymentType" class="flex flex-col gap-1">
         <FloatLabel variant="on">
           <Select
             v-bind="$field.props"
             :options="paymentTypeMapForComponents"
             :disabled="props.disabled"
-            @change="onSelectPaymentType"
-            optionLabel="label"
-            optionValue="value"
+            option-label="label"
+            option-value="value"
             fluid
+            @change="onSelectPaymentType"
           >
           </Select>
           <label for="name_input">Rodzaj płatności</label>
         </FloatLabel>
-        <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-          $field.error?.message
-        }}</Message>
+        <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+          {{
+            $field.error?.message
+          }}
+        </Message>
       </FormField>
 
       <!-- BANK DETAILS -->
       <Panel v-if="!cash" header="Dane płatności" toggleable collapsed>
         <div class="flex flex-col gap-2">
           <!-- IBAN -->
-          <FormField v-slot="$field" initialValue="" name="iban" class="flex flex-col gap-1">
+          <FormField v-slot="$field" initial-value="" name="iban" class="flex flex-col gap-1">
             <FloatLabel variant="on">
               <InputText
                 v-bind="$field.props"
+                id="iban_input"
                 v-model="$field.value"
                 :disabled="props.disabled"
-                id="iban_input"
                 type="text"
                 fluid
               />
               <label for="iban_input">Numer rachunku bankowego (IBAN)</label>
             </FloatLabel>
-            <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-              $field.error?.message
-            }}</Message>
+            <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+              {{
+                $field.error?.message
+              }}
+            </Message>
           </FormField>
 
           <!-- BANK NAME -->
-          <FormField v-slot="$field" initialValue="" name="bankName" class="flex flex-col gap-1">
+          <FormField v-slot="$field" initial-value="" name="bankName" class="flex flex-col gap-1">
             <FloatLabel variant="on">
               <InputText
                 v-bind="$field.props"
+                id="bankName_input"
                 v-model="$field.value"
                 :disabled="props.disabled"
-                id="bankName_input"
                 type="text"
                 fluid
               />
               <label for="bankName_input">Nazwa Banku</label>
             </FloatLabel>
-            <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-              $field.error?.message
-            }}</Message>
+            <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+              {{
+                $field.error?.message
+              }}
+            </Message>
           </FormField>
         </div>
       </Panel>
@@ -239,7 +247,7 @@ watch(
       <!-- PAYMENT DUE DATE -->
       <FormField
         v-slot="$field"
-        :initialValue="null"
+        :initial-value="null"
         name="paymentDueDate"
         class="flex flex-col gap-1"
       >
@@ -248,11 +256,11 @@ watch(
             v-bind="$field.props"
             v-model="$field.value"
             :disabled="paid || props.disabled"
-            inputId="payDueDate"
-            dateFormat="yy/mm/dd"
+            input-id="payDueDate"
+            date-format="yy/mm/dd"
             fluid
-            showIcon
-            iconDisplay="input"
+            show-icon
+            icon-display="input"
           />
           <label for="payDueDate">Termin płatności</label>
         </FloatLabel>
@@ -264,7 +272,7 @@ watch(
       <!-- PAYMENT DATE -->
       <FormField
         v-slot="$field"
-        :initialValue="null"
+        :initial-value="null"
         name="paymentDate"
         class="flex flex-col gap-1"
       >
@@ -273,17 +281,19 @@ watch(
             v-bind="$field.props"
             v-model="$field.value"
             :disabled="!paid || props.disabled"
-            inputId="payDate"
-            dateFormat="yy/mm/dd"
+            input-id="payDate"
+            date-format="yy/mm/dd"
             fluid
-            showIcon
-            iconDisplay="input"
+            show-icon
+            icon-display="input"
           />
           <label for="payDate">Data płatności</label>
         </FloatLabel>
-        <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-          $field.error?.message
-        }}</Message>
+        <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+          {{
+            $field.error?.message
+          }}
+        </Message>
       </FormField>
     </Form>
   </Panel>

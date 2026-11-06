@@ -1,25 +1,10 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import DataTable from "primevue/datatable";
-import Column from "primevue/column";
 import { formatPLN } from "../../../lib/utils";
-
-import items from "../../../assets/mock_invoices";
 
 const props = defineProps<{
   selectedYear: number;
   selectedMonth: number | null;
 }>();
-
-const selectedInvoice = ref(null);
-
-function onInvoiceSelect(event: any) {
-  selectedInvoice.value = event.data;
-}
-
-function onInvoiceUnselect() {
-  selectedInvoice.value = null;
-}
 
 // Randomly generated cashflow values for demonstration purposes
 const profit = Math.floor(Math.random() * 1000);

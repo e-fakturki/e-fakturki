@@ -459,9 +459,8 @@ onMounted(async () => {
     <!-- invoice entries table -->
     <DataTable
       :value="invoice?.entries"
-      dataKey="row_number"
-      editMode="cell"
-      @cell-edit-complete="onCellEditComplete"
+      data-key="row_number"
+      edit-mode="cell"
       :pt="{
         table: { style: 'table-layout: fixed;' },
         column: {
@@ -470,6 +469,7 @@ onMounted(async () => {
           }),
         },
       }"
+      @cell-edit-complete="onCellEditComplete"
     >
       <template #header>
         <div class="flex flex-wrap items-center justify-between gap-2">
@@ -493,8 +493,8 @@ onMounted(async () => {
               severity="danger"
               rounded
               raised
-              @click="removeInvoiceEntry(data)"
               :disabled="formsDisabled"
+              @click="removeInvoiceEntry(data)"
             />
           </div>
 
@@ -524,11 +524,11 @@ onMounted(async () => {
           <span v-else-if="field === 'delivery_date'">
             <DatePicker
               v-model="data[field]"
-              dateFormat="yy/mm/dd"
+              date-format="yy/mm/dd"
               fluid
+              :disabled="formsDisabled"
               @click.stop
               @mousedown.stop
-              :disabled="formsDisabled"
             />
           </span>
 
@@ -536,8 +536,7 @@ onMounted(async () => {
           <span
             v-else-if="field === 'tax_rate'"
             v-tooltip.bottom="taxRateMap.get(data[field])?.hint_text"
-            >{{ taxRateMap.get(data[field])?.display_text || data[field] }}</span
-          >
+          >{{ taxRateMap.get(data[field])?.display_text || data[field] }}</span>
 
           <!-- default -->
           <InputText v-else v-model="data[field]" autofocus fluid :disabled="formsDisabled" />
@@ -556,7 +555,7 @@ onMounted(async () => {
               v-model="data[field]"
               :options="[...taxRateMap.keys()]"
               class="h-10.5"
-              emptyMessage="Brak opcji do wyboru"
+              empty-message="Brak opcji do wyboru"
               fluid
               :disabled="formsDisabled"
             >
@@ -590,11 +589,11 @@ onMounted(async () => {
           <template v-else-if="field === 'delivery_date'">
             <DatePicker
               v-model="data[field]"
-              dateFormat="yy/mm/dd"
+              date-format="yy/mm/dd"
               fluid
+              :disabled="formsDisabled"
               @click.stop
               @mousedown.stop
-              :disabled="formsDisabled"
             />
           </template>
 
@@ -608,8 +607,8 @@ onMounted(async () => {
             <InputNumber
               v-model="data[field]"
               locale="pl-PL"
-              :minFractionDigits="0"
-              :maxFractionDigits="3"
+              :min-fraction-digits="0"
+              :max-fraction-digits="3"
               autofocus
               fluid
               :disabled="formsDisabled"
@@ -639,13 +638,13 @@ onMounted(async () => {
         <template #footer>
           <Button
             v-if="col.field === 'delete_row'"
+            v-tooltip.bottom="'Dodaj kolejną pozycję'"
             class="ml-2"
             icon="pi pi-plus"
             rounded
             raised
-            v-tooltip.bottom="'Dodaj kolejną pozycję'"
-            @click="newEntry"
             :disabled="formsDisabled"
+            @click="newEntry"
           ></Button>
 
           <span v-if="col.field === 'gross_price'" class="font-semibold"> SUMA: </span>

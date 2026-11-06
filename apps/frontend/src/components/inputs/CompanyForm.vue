@@ -280,11 +280,11 @@ watch(
 <template>
   <Dialog
     :visible="visible"
-    @update:visible="emit('update:visible', $event)"
     :closable="dialogClosable"
     modal
     :draggable="false"
     :style="{ width: '40rem' }"
+    @update:visible="emit('update:visible', $event)"
   >
     <template #header>
       <div v-if="props.createOrUpdate === 'update'" class="flex flex-col text-xl font-semibold">
@@ -303,123 +303,131 @@ watch(
         <span v-else> Dodaj nową firmę </span>
       </div>
     </template>
-    <span v-if="props.createOrUpdate === 'create'" class="flex pb-4"
-      >Pola opcjonalne i dodatkowe informacje o firmie można zmienić później.</span
-    >
+    <span v-if="props.createOrUpdate === 'create'" class="flex pb-4">Pola opcjonalne i dodatkowe informacje o firmie można zmienić później.</span>
     <div class="card flex justify-center pt-2">
       <Form
         ref="formRef"
         :resolver="resolver"
-        @submit="onFormSubmit"
         disa
         class="flex flex-col gap-4 w-full items-center sm:w-150"
+        @submit="onFormSubmit"
       >
         <div class="flex gap-4 w-full">
           <div class="flex flex-col gap-4 w-full">
             <FormField
               v-slot="$field"
               name="name"
-              :initialValue="props.createOrUpdate === 'update' ? props.companyInfo?.name : ''"
+              :initial-value="props.createOrUpdate === 'update' ? props.companyInfo?.name : ''"
               class="flex flex-col gap-1"
             >
               <FloatLabel variant="on">
                 <InputText
                   v-bind="$field.props"
-                  :disabled="isLoading"
                   id="name_input"
+                  :disabled="isLoading"
                   type="text"
                   fluid
                 />
                 <label for="name_input">Nazwa firmy</label>
               </FloatLabel>
-              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-                $field.error?.message
-              }}</Message>
+              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                {{
+                  $field.error?.message
+                }}
+              </Message>
             </FormField>
             <FormField
               v-slot="$field"
               name="nip"
-              :initialValue="props.createOrUpdate === 'update' ? props.companyInfo?.nip : ''"
+              :initial-value="props.createOrUpdate === 'update' ? props.companyInfo?.nip : ''"
               class="flex flex-col gap-1"
             >
               <FloatLabel variant="on">
                 <InputText
                   v-bind="$field.props"
-                  :disabled="isLoading"
                   id="nip_input"
+                  :disabled="isLoading"
                   type="text"
                   fluid
                 />
                 <label for="nip_input">NIP Firmy</label>
               </FloatLabel>
-              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-                $field.error?.message
-              }}</Message>
+              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                {{
+                  $field.error?.message
+                }}
+              </Message>
             </FormField>
             <FormField
               v-slot="$field"
               name="krs"
-              :initialValue="props.createOrUpdate === 'update' ? props.companyInfo?.krs : ''"
+              :initial-value="props.createOrUpdate === 'update' ? props.companyInfo?.krs : ''"
               class="flex flex-col gap-1"
             >
               <FloatLabel variant="on">
                 <InputText
                   v-bind="$field.props"
-                  :disabled="isLoading"
                   id="krs_input"
+                  :disabled="isLoading"
                   type="text"
                   fluid
                 />
                 <label for="krs_input">KRS Firmy (Opcjonalnie)</label>
               </FloatLabel>
-              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-                $field.error?.message
-              }}</Message>
+              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                {{
+                  $field.error?.message
+                }}
+              </Message>
             </FormField>
             <FormField
               v-slot="$field"
               name="regon"
-              :initialValue="props.createOrUpdate === 'update' ? props.companyInfo?.regon : ''"
+              :initial-value="props.createOrUpdate === 'update' ? props.companyInfo?.regon : ''"
               class="flex flex-col gap-1"
             >
               <FloatLabel variant="on">
                 <InputText
                   v-bind="$field.props"
-                  :disabled="isLoading"
                   id="regon_input"
+                  :disabled="isLoading"
                   type="text"
                   fluid
                 />
                 <label for="regon_input">REGON Firmy (Opcjonalnie)</label>
               </FloatLabel>
-              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-                $field.error?.message
-              }}</Message>
+              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                {{
+                  $field.error?.message
+                }}
+              </Message>
             </FormField>
             <FormField
               v-slot="$field"
               name="email"
-              :initialValue="props.createOrUpdate === 'update' ? props.companyInfo?.email : ''"
+              :initial-value="props.createOrUpdate === 'update' ? props.companyInfo?.email : ''"
               class="flex flex-col gap-1"
             >
               <FloatLabel variant="on">
                 <InputText
                   v-bind="$field.props"
-                  :disabled="isLoading"
                   id="email_input"
+                  :disabled="isLoading"
                   type="text"
                   fluid
                 />
                 <label for="email_input">E-mail (Opcjonalnie)</label>
               </FloatLabel>
-              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-                $field.error?.message
-              }}</Message>
+              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                {{
+                  $field.error?.message
+                }}
+              </Message>
             </FormField>
             <FormField
               v-slot="$field"
               name="phoneNumber"
-              :initialValue="
+              :initial-value="
                 props.createOrUpdate === 'update' ? props.companyInfo?.phone_number : ''
               "
               class="flex flex-col gap-1"
@@ -427,23 +435,25 @@ watch(
               <FloatLabel variant="on">
                 <InputText
                   v-bind="$field.props"
-                  :disabled="isLoading"
                   id="phoneNumber_input"
+                  :disabled="isLoading"
                   type="text"
                   fluid
                 />
                 <label for="phoneNumber_input">Telefon (Opcjonalnie)</label>
               </FloatLabel>
-              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-                $field.error?.message
-              }}</Message>
+              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                {{
+                  $field.error?.message
+                }}
+              </Message>
             </FormField>
           </div>
           <div class="flex flex-col gap-4 w-full">
             <FormField
               v-slot="$field"
               name="countryCode"
-              :initialValue="
+              :initial-value="
                 props.createOrUpdate === 'update' ? props.companyInfo?.country_code : 'PL'
               "
             >
@@ -451,8 +461,8 @@ watch(
                 v-bind="$field.props"
                 :options="countries"
                 :disabled="userCompany || isLoading"
-                optionLabel="label"
-                optionValue="value"
+                option-label="label"
+                option-value="value"
                 placeholder="Kraj"
                 fluid
               >
@@ -489,47 +499,51 @@ watch(
             <FormField
               v-slot="$field"
               name="addressL1"
-              :initialValue="props.createOrUpdate === 'update' ? props.companyInfo?.address_l1 : ''"
+              :initial-value="props.createOrUpdate === 'update' ? props.companyInfo?.address_l1 : ''"
               class="flex flex-col gap-1"
             >
               <FloatLabel variant="on">
                 <InputText
                   v-bind="$field.props"
-                  :disabled="isLoading"
                   id="addresL1_input"
+                  :disabled="isLoading"
                   type="text"
                   fluid
                 />
                 <label for="addresL1_input">Adres linia 1 (Opcjonalnie)</label>
               </FloatLabel>
-              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-                $field.error?.message
-              }}</Message>
+              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                {{
+                  $field.error?.message
+                }}
+              </Message>
             </FormField>
             <FormField
               v-slot="$field"
               name="addressL2"
-              :initialValue="props.createOrUpdate === 'update' ? props.companyInfo?.address_l2 : ''"
+              :initial-value="props.createOrUpdate === 'update' ? props.companyInfo?.address_l2 : ''"
               class="flex flex-col gap-1"
             >
               <FloatLabel variant="on">
                 <InputText
                   v-bind="$field.props"
-                  :disabled="isLoading"
                   id="addresL2_input"
+                  :disabled="isLoading"
                   type="text"
                   fluid
                 />
                 <label for="addresL2_input">Adres linia 2 (Opcjonalnie)</label>
               </FloatLabel>
-              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-                $field.error?.message
-              }}</Message>
+              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                {{
+                  $field.error?.message
+                }}
+              </Message>
             </FormField>
             <FormField
               v-slot="$field"
               name="addressCorrespondanceL1"
-              :initialValue="
+              :initial-value="
                 props.createOrUpdate === 'update'
                   ? props.companyInfo?.address_correspondance_l1
                   : ''
@@ -539,23 +553,23 @@ watch(
               <FloatLabel variant="on">
                 <InputText
                   v-bind="$field.props"
-                  :disabled="isLoading"
                   id="addressCorrespondanceL1_input"
+                  :disabled="isLoading"
                   type="text"
                   fluid
                 />
-                <label for="addressCorrespondanceL1_input"
-                  >Adres korespondencyjny linia 1 (Opcjonalnie)</label
-                >
+                <label for="addressCorrespondanceL1_input">Adres korespondencyjny linia 1 (Opcjonalnie)</label>
               </FloatLabel>
-              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-                $field.error?.message
-              }}</Message>
+              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                {{
+                  $field.error?.message
+                }}
+              </Message>
             </FormField>
             <FormField
               v-slot="$field"
               name="addressCorrespondanceL2"
-              :initialValue="
+              :initial-value="
                 props.createOrUpdate === 'update'
                   ? props.companyInfo?.address_correspondance_l2
                   : ''
@@ -565,23 +579,23 @@ watch(
               <FloatLabel variant="on">
                 <InputText
                   v-bind="$field.props"
-                  :disabled="isLoading"
                   id="addressCorrespondanceL2_input"
+                  :disabled="isLoading"
                   type="text"
                   fluid
                 />
-                <label for="addressCorrespondanceL2_input"
-                  >Adres korespondencyjny linia 2 (Opcjonalnie)</label
-                >
+                <label for="addressCorrespondanceL2_input">Adres korespondencyjny linia 2 (Opcjonalnie)</label>
               </FloatLabel>
-              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-                $field.error?.message
-              }}</Message>
+              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                {{
+                  $field.error?.message
+                }}
+              </Message>
             </FormField>
             <FormField
               v-slot="$field"
               name="additionalInfo"
-              :initialValue="
+              :initial-value="
                 props.createOrUpdate === 'update' ? props.companyInfo?.additional_info : ''
               "
               class="flex flex-col gap-1"
@@ -589,16 +603,18 @@ watch(
               <FloatLabel variant="on">
                 <InputText
                   v-bind="$field.props"
-                  :disabled="isLoading"
                   id="additionalInfo_input"
+                  :disabled="isLoading"
                   type="text"
                   fluid
                 />
                 <label for="additionalInfo_input">Dodatkowe informacje (Opcjonalnie)</label>
               </FloatLabel>
-              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-                $field.error?.message
-              }}</Message>
+              <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                {{
+                  $field.error?.message
+                }}
+              </Message>
             </FormField>
           </div>
         </div>

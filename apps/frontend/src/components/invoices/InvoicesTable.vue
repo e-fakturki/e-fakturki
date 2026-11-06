@@ -229,27 +229,21 @@ onMounted(() => {
 
 <template>
   <DataTable
+    v-model:editing-rows="editRows"
+    v-model:selection="selectedInvoice"
     :value="sortedInvoices"
     :loading="getInvoicesMutation.isPending.value"
-    v-model:editingRows="editRows"
     edit-mode="row"
-    dataKey="invoice_number"
-    @row-edit-init="isEditing = true"
-    @row-edit-save="OnChoosePaymentStatus"
-    @row-edit-cancel="isEditing = false"
-    v-model:selection="selectedInvoice"
+    data-key="invoice_number"
     selection-mode="single"
-    @row-select="onInvoiceSelect"
-    @row-unselect="onInvoiceUnselect"
     paginator
     paginator-position="bottom"
     :rows="pageSize"
     :first="first"
     :rows-per-page-options="[5, 10, 15, 25, 50]"
     :total-records="totalRecords"
-    @page="onPageChange"
     lazy
-    removableSort
+    removable-sort
     scroll-height="flex"
     scrollable
     scroll-direction="both"
@@ -262,6 +256,12 @@ onMounted(() => {
         }),
       },
     }"
+    @row-edit-init="isEditing = true"
+    @row-edit-save="OnChoosePaymentStatus"
+    @row-edit-cancel="isEditing = false"
+    @row-select="onInvoiceSelect"
+    @row-unselect="onInvoiceUnselect"
+    @page="onPageChange"
   >
     <template #header>
       <div class="flex flex-wrap items-center justify-between gap-2">
@@ -316,8 +316,8 @@ onMounted(() => {
               v-model="date"
               view="month"
               :manual-input="false"
-              showIcon
-              iconDisplay="input"
+              show-icon
+              icon-display="input"
               date-format="yy/mm"
               @date-select="onRangeChange"
             >
@@ -343,9 +343,9 @@ onMounted(() => {
     <Column field="ksef_status" sortable header="Status KSeF" style="width: 10%">
       <template #body="slotProps">
         <Tag
+          v-tooltip.bottom="{ value: ksefStatusHint[slotProps.data.ksef_status] }"
           :icon="ksefStatusIcon[slotProps.data.ksef_status]"
           :severity="ksefStatusSeverity[slotProps.data.ksef_status]"
-          v-tooltip.bottom="{ value: ksefStatusHint[slotProps.data.ksef_status] }"
         ></Tag>
       </template>
     </Column>
@@ -387,8 +387,8 @@ onMounted(() => {
         <Select
           v-model="data[field]"
           :options="paymentStatusMapForComponents"
-          optionLabel="label"
-          optionValue="value"
+          option-label="label"
+          option-value="value"
           placeholder="Select a Status"
           float
         >
@@ -401,7 +401,7 @@ onMounted(() => {
         </Select>
       </template>
     </Column>
-    <Column :rowEditor="true" bodyStyle="text-align:left" style="width: 10%"></Column>
+    <Column :row-editor="true" body-style="text-align:left" style="width: 10%"></Column>
   </DataTable>
   <!-- Invoice details dialog -->
   <InvoiceDetails

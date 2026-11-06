@@ -184,11 +184,11 @@ const onFormSubmit = async (loggingIn: boolean, event: FormSubmitEvent) => {
 <template>
   <Dialog
     :visible="visible"
-    @update:visible="emit('update:visible', $event)"
     modal
     :draggable="false"
     :closable="false"
     :style="{ width: '40rem' }"
+    @update:visible="emit('update:visible', $event)"
   >
     <template #header>
       <div class="flex flex-1 justify-between">
@@ -207,19 +207,21 @@ const onFormSubmit = async (loggingIn: boolean, event: FormSubmitEvent) => {
       <!-- LOGIN FORM -->
       <Form
         v-if="loginDialog"
-        :initialValues
+        :initial-values
         :resolver="loginResolver"
-        @submit="(event) => onFormSubmit(true, event)"
         class="flex flex-col gap-4 w-full sm:w-80"
+        @submit="(event) => onFormSubmit(true, event)"
       >
         <FormField v-slot="$field" name="email" class="flex flex-col gap-1">
           <FloatLabel variant="on">
             <InputText v-bind="$field.props" id="email_input" type="text" fluid />
             <label for="email_input">E-mail</label>
           </FloatLabel>
-          <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-            $field.error?.message
-          }}</Message>
+          <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+            {{
+              $field.error?.message
+            }}
+          </Message>
         </FormField>
         <FormField v-slot="$field" name="password" class="flex flex-col gap-1">
           <FloatLabel variant="on">
@@ -228,14 +230,16 @@ const onFormSubmit = async (loggingIn: boolean, event: FormSubmitEvent) => {
               id="password_input"
               type="text"
               :feedback="false"
-              toggleMask
+              toggle-mask
               fluid
             />
             <label for="password_input">Hasło</label>
           </FloatLabel>
-          <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-            $field.error?.message
-          }}</Message>
+          <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+            {{
+              $field.error?.message
+            }}
+          </Message>
         </FormField>
         <Button
           type="submit"
@@ -248,37 +252,43 @@ const onFormSubmit = async (loggingIn: boolean, event: FormSubmitEvent) => {
       <!-- REGISTER FORM -->
       <Form
         v-if="!loginDialog"
-        :initialValues
+        :initial-values
         :resolver="registerResolver"
-        @submit="(event) => onFormSubmit(false, event)"
         class="flex flex-col gap-4 w-full sm:w-80"
+        @submit="(event) => onFormSubmit(false, event)"
       >
         <FormField v-slot="$field" name="firstname" class="flex flex-col gap-1">
           <FloatLabel variant="on">
             <InputText v-bind="$field.props" id="name_input" type="text" fluid />
             <label for="name_input">Imię</label>
           </FloatLabel>
-          <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-            $field.error?.message
-          }}</Message>
+          <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+            {{
+              $field.error?.message
+            }}
+          </Message>
         </FormField>
         <FormField v-slot="$field" name="lastname" class="flex flex-col gap-1">
           <FloatLabel variant="on">
             <InputText v-bind="$field.props" id="lastname_input" type="text" fluid />
             <label for="lastname_input">Nazwisko</label>
           </FloatLabel>
-          <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-            $field.error?.message
-          }}</Message>
+          <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+            {{
+              $field.error?.message
+            }}
+          </Message>
         </FormField>
         <FormField v-slot="$field" name="email" class="flex flex-col gap-1">
           <FloatLabel variant="on">
             <InputText v-bind="$field.props" id="email_input" type="text" fluid />
             <label for="email_input">E-mail</label>
           </FloatLabel>
-          <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-            $field.error?.message
-          }}</Message>
+          <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+            {{
+              $field.error?.message
+            }}
+          </Message>
         </FormField>
         <FormField v-slot="$field" name="password" class="flex flex-col gap-1">
           <FloatLabel variant="on">
@@ -287,14 +297,16 @@ const onFormSubmit = async (loggingIn: boolean, event: FormSubmitEvent) => {
               id="password_input"
               type="text"
               :feedback="false"
-              toggleMask
+              toggle-mask
               fluid
             />
             <label for="password_input">Hasło</label>
           </FloatLabel>
-          <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-            $field.error?.message
-          }}</Message>
+          <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+            {{
+              $field.error?.message
+            }}
+          </Message>
         </FormField>
         <Button
           type="submit"

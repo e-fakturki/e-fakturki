@@ -54,7 +54,7 @@ const calculateAgainstPreviousMonth = computed(() => {
           <h3
             :class="
               (calculateAgainstPreviousMonth.startsWith('+') && props.type === 'sales') ||
-              (calculateAgainstPreviousMonth.startsWith('-') && props.type === 'purchases')
+                (calculateAgainstPreviousMonth.startsWith('-') && props.type === 'purchases')
                 ? 'text-green-600'
                 : 'text-red-600'
             "
@@ -64,25 +64,25 @@ const calculateAgainstPreviousMonth = computed(() => {
         </div>
       </div>
       <Button
+        v-tooltip.bottom="type === 'sales' ? 'Dodaj dane sprzedażowe' : 'Dodaj dane kosztowe'"
         icon="pi pi-plus"
         rounded
-        v-tooltip.bottom="type === 'sales' ? 'Dodaj dane sprzedażowe' : 'Dodaj dane kosztowe'"
         @click="showSaleCostInputDialog = true"
       ></Button>
     </div>
     <!-- INVOICES BRIEF TABLE -->
     <div class="p-div-white flex flex-1 flex-col gap-2">
       <DataTable
-        :value="items"
-        dataKey="inv_nr"
-        stripedRows
         v-model:selection="selectedInvoice"
+        :value="items"
+        data-key="inv_nr"
+        striped-rows
         selection-mode="single"
+        removable-sort
+        scrollable
+        scroll-height="400px"
         @row-select="onInvoiceSelect"
         @row-unselect="onInvoiceUnselect"
-        removableSort
-        scrollable
-        scrollHeight="400px"
       >
         <Column field="date" header="Data" sortable></Column>
         <Column field="type" header="Typ" sortable>

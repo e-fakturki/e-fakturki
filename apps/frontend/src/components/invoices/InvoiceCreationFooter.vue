@@ -30,8 +30,8 @@ const emits = defineEmits(["clear", "preview", "save", "saveAndSend"]);
           raised
           outlined
           severity="info"
-          @click="emits('preview')"
           :disabled="props.disabled"
+          @click="emits('preview')"
         />
 
         <Button
@@ -39,8 +39,8 @@ const emits = defineEmits(["clear", "preview", "save", "saveAndSend"]);
           icon="pi pi-save"
           raised
           severity="success"
-          @click="emits('save')"
           :disabled="props.disabled"
+          @click="emits('save')"
         />
 
         <Button
@@ -48,8 +48,8 @@ const emits = defineEmits(["clear", "preview", "save", "saveAndSend"]);
           icon="pi pi-cloud-upload"
           raised
           severity="danger"
-          @click="emits('saveAndSend')"
           :disabled="props.disabled"
+          @click="emits('saveAndSend')"
         />
       </div>
     </template>

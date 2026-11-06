@@ -183,18 +183,18 @@ watch(
       <!-- COMPANY NAME -->
       <FormField
         v-slot="$field"
-        :initialValue="props.seller ? currentUserStore.getCompanyName : ''"
+        v-tooltip.top="props.seller ? 'Dane własnej firmy można zmienić w zakładce Firmy' : ''"
+        :initial-value="props.seller ? currentUserStore.getCompanyName : ''"
         name="name"
         class="flex flex-col gap-1"
-        v-tooltip.top="props.seller ? 'Dane własnej firmy można zmienić w zakładce Firmy' : ''"
       >
         <FloatLabel variant="on">
           <InputText
-            :readonly="props.seller"
             v-bind="$field.props"
-            v-model="$field.value"
-            :disabled="props.disabled"
             id="company_name_input"
+            v-model="$field.value"
+            :readonly="props.seller"
+            :disabled="props.disabled"
             type="text"
             fluid
           />
@@ -209,18 +209,18 @@ watch(
       <!-- NIP -->
       <FormField
         v-slot="$field"
-        name="nip"
-        :initialValue="props.seller ? currentUserStore.getCompanyNip : ''"
-        class="flex flex-col gap-1"
         v-tooltip.top="props.seller ? 'Dane własnej firmy można zmienić w zakładce Firmy' : ''"
+        name="nip"
+        :initial-value="props.seller ? currentUserStore.getCompanyNip : ''"
+        class="flex flex-col gap-1"
       >
         <FloatLabel variant="on">
           <InputText
-            :readonly="props.seller"
             v-bind="$field.props"
-            v-model="$field.value"
-            :disabled="props.disabled"
             id="company_nip_input"
+            v-model="$field.value"
+            :readonly="props.seller"
+            :disabled="props.disabled"
             type="text"
             fluid
           />
@@ -235,18 +235,18 @@ watch(
       <!-- KRS -->
       <FormField
         v-slot="$field"
-        name="krs"
-        :initialValue="props.seller ? currentUserStore.getCompanyKrs : ''"
-        class="flex flex-col gap-1"
         v-tooltip.top="props.seller ? 'Dane własnej firmy można zmienić w zakładce Firmy' : ''"
+        name="krs"
+        :initial-value="props.seller ? currentUserStore.getCompanyKrs : ''"
+        class="flex flex-col gap-1"
       >
         <FloatLabel variant="on">
           <InputText
-            :readonly="props.seller"
             v-bind="$field.props"
-            v-model="$field.value"
-            :disabled="props.disabled"
             id="company_krs_input"
+            v-model="$field.value"
+            :readonly="props.seller"
+            :disabled="props.disabled"
             type="text"
             fluid
           />
@@ -261,18 +261,18 @@ watch(
       <!-- REGON -->
       <FormField
         v-slot="$field"
-        name="regon"
-        :initialValue="props.seller ? currentUserStore.getCompanyRegon : ''"
-        class="flex flex-col gap-1"
         v-tooltip.top="props.seller ? 'Dane własnej firmy można zmienić w zakładce Firmy' : ''"
+        name="regon"
+        :initial-value="props.seller ? currentUserStore.getCompanyRegon : ''"
+        class="flex flex-col gap-1"
       >
         <FloatLabel variant="on">
           <InputText
-            :readonly="props.seller"
             v-bind="$field.props"
-            v-model="$field.value"
-            :disabled="props.disabled"
             id="company_regon_input"
+            v-model="$field.value"
+            :readonly="props.seller"
+            :disabled="props.disabled"
             type="text"
             fluid
           />
@@ -290,16 +290,16 @@ watch(
           <!-- COUNTRY -->
           <FormField
             v-slot="$field"
-            name="countryCode"
-            :initialValue="props.seller ? currentUserStore.getCompanyCountryCode : 'PL'"
             v-tooltip.top="props.seller ? 'Dane własnej firmy można zmienić w zakładce Firmy' : ''"
+            name="countryCode"
+            :initial-value="props.seller ? currentUserStore.getCompanyCountryCode : 'PL'"
           >
             <Select
               v-bind="$field.props"
               :options="countries"
               :disabled="props.seller || props.disabled"
-              optionLabel="label"
-              optionValue="value"
+              option-label="label"
+              option-value="value"
               placeholder="Kraj"
               fluid
             >
@@ -342,18 +342,18 @@ watch(
           <!-- ADDRESS LINE 1 -->
           <FormField
             v-slot="$field"
-            :initialValue="props.seller ? currentUserStore.getCompanyAddressL1 : ''"
+            v-tooltip.top="props.seller ? 'Dane własnej firmy można zmienić w zakładce Firmy' : ''"
+            :initial-value="props.seller ? currentUserStore.getCompanyAddressL1 : ''"
             name="addressL1"
             class="flex flex-col gap-1"
-            v-tooltip.top="props.seller ? 'Dane własnej firmy można zmienić w zakładce Firmy' : ''"
           >
             <FloatLabel variant="on">
               <InputText
-                :readonly="props.seller"
                 v-bind="$field.props"
-                v-model="$field.value"
-                :disabled="props.disabled"
                 id="address_l1_input"
+                v-model="$field.value"
+                :readonly="props.seller"
+                :disabled="props.disabled"
                 type="text"
                 fluid
               />
@@ -368,18 +368,18 @@ watch(
           <!-- ADDRESS LINE 2 -->
           <FormField
             v-slot="$field"
-            :initialValue="props.seller ? currentUserStore.getCompanyAddressL2 : ''"
+            v-tooltip.top="props.seller ? 'Dane własnej firmy można zmienić w zakładce Firmy' : ''"
+            :initial-value="props.seller ? currentUserStore.getCompanyAddressL2 : ''"
             name="addressL2"
             class="flex flex-col gap-1"
-            v-tooltip.top="props.seller ? 'Dane własnej firmy można zmienić w zakładce Firmy' : ''"
           >
             <FloatLabel variant="on">
               <InputText
-                :readonly="props.seller"
                 v-bind="$field.props"
-                v-model="$field.value"
-                :disabled="props.disabled"
                 id="address_l2_input"
+                v-model="$field.value"
+                :readonly="props.seller"
+                :disabled="props.disabled"
                 type="text"
                 fluid
               />
@@ -399,18 +399,18 @@ watch(
           <!-- EMAIL -->
           <FormField
             v-slot="$field"
-            :initialValue="props.seller ? currentUserStore.getCompanyEmail : ''"
+            v-tooltip.top="props.seller ? 'Dane własnej firmy można zmienić w zakładce Firmy' : ''"
+            :initial-value="props.seller ? currentUserStore.getCompanyEmail : ''"
             name="email"
             class="flex flex-col gap-1"
-            v-tooltip.top="props.seller ? 'Dane własnej firmy można zmienić w zakładce Firmy' : ''"
           >
             <FloatLabel variant="on">
               <InputText
-                :readonly="props.seller"
                 v-bind="$field.props"
-                v-model="$field.value"
-                :disabled="props.disabled"
                 id="company_email_input"
+                v-model="$field.value"
+                :readonly="props.seller"
+                :disabled="props.disabled"
                 type="text"
                 fluid
               />
@@ -424,18 +424,18 @@ watch(
           <!-- PHONE -->
           <FormField
             v-slot="$field"
-            :initialValue="props.seller ? currentUserStore.getCompanyPhoneNumber : ''"
+            v-tooltip.top="props.seller ? 'Dane własnej firmy można zmienić w zakładce Firmy' : ''"
+            :initial-value="props.seller ? currentUserStore.getCompanyPhoneNumber : ''"
             name="phoneNumber"
             class="flex flex-col gap-1"
-            v-tooltip.top="props.seller ? 'Dane własnej firmy można zmienić w zakładce Firmy' : ''"
           >
             <FloatLabel variant="on">
               <InputText
-                :readonly="props.seller"
                 v-bind="$field.props"
-                v-model="$field.value"
-                :disabled="props.disabled"
                 id="company_phone_input"
+                v-model="$field.value"
+                :readonly="props.seller"
+                :disabled="props.disabled"
                 type="text"
                 fluid
               />
@@ -449,18 +449,18 @@ watch(
           <!-- ADDRESS CORRESPONDANCE LINE 2 -->
           <FormField
             v-slot="$field"
-            :initialValue="props.seller ? currentUserStore.getCompanyAddressCorrespondanceL1 : ''"
+            v-tooltip.top="props.seller ? 'Dane własnej firmy można zmienić w zakładce Firmy' : ''"
+            :initial-value="props.seller ? currentUserStore.getCompanyAddressCorrespondanceL1 : ''"
             name="addressCorrespondanceL1"
             class="flex flex-col gap-1"
-            v-tooltip.top="props.seller ? 'Dane własnej firmy można zmienić w zakładce Firmy' : ''"
           >
             <FloatLabel variant="on">
               <InputText
-                :readonly="props.seller"
                 v-bind="$field.props"
-                v-model="$field.value"
-                :disabled="props.disabled"
                 id="correspondence_address_l1_input"
+                v-model="$field.value"
+                :readonly="props.seller"
+                :disabled="props.disabled"
                 type="text"
                 fluid
               />
@@ -476,18 +476,18 @@ watch(
           <!-- ADDRESS CORRESPONDANCE LINE 2 -->
           <FormField
             v-slot="$field"
-            :initialValue="props.seller ? currentUserStore.getCompanyAddressCorrespondanceL2 : ''"
+            v-tooltip.top="props.seller ? 'Dane własnej firmy można zmienić w zakładce Firmy' : ''"
+            :initial-value="props.seller ? currentUserStore.getCompanyAddressCorrespondanceL2 : ''"
             name="addressCorrespondanceL2"
             class="flex flex-col gap-1"
-            v-tooltip.top="props.seller ? 'Dane własnej firmy można zmienić w zakładce Firmy' : ''"
           >
             <FloatLabel variant="on">
               <InputText
-                :readonly="props.seller"
                 v-bind="$field.props"
-                v-model="$field.value"
-                :disabled="props.disabled"
                 id="correspondence_address_l2_input"
+                v-model="$field.value"
+                :readonly="props.seller"
+                :disabled="props.disabled"
                 type="text"
                 fluid
               />

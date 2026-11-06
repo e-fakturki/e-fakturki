@@ -30,8 +30,8 @@ function nextYear() {
         icon="pi pi-chevron-left"
         raised
         rounded
-        @click="previousYear"
         :disabled="selectedYear === 2000"
+        @click="previousYear"
       />
     </template>
 
@@ -44,8 +44,8 @@ function nextYear() {
         icon="pi pi-chevron-right"
         raised
         rounded
-        @click="nextYear"
         :disabled="selectedYear === new Date().getFullYear()"
+        @click="nextYear"
       />
     </template>
   </Toolbar>

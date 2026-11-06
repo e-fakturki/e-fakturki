@@ -37,28 +37,28 @@ function onYearSelect(year: number) {
 
 <template>
   <div class="flex h-full min-h-0 flex-col">
-    <YearChoiceTopBar :selectedYear="selectedYear" @update:selectedYear="onYearSelect" />
+    <YearChoiceTopBar :selected-year="selectedYear" @update:selected-year="onYearSelect" />
     <MonthChoiceTopBar
-      :selectedYear="selectedYear"
-      :selectedMonth="selectedMonth"
-      @update:selectedMonth="onMonthSelect"
+      :selected-year="selectedYear"
+      :selected-month="selectedMonth"
+      @update:selected-month="onMonthSelect"
     />
 
     <div class="p-div-grey mt-4 gap-4 flex min-h-0 flex-1 flex-col justify-start overflow-y-auto">
-      <InvoicesSummaryBar :selectedYear="selectedYear" :selectedMonth="selectedMonth" />
+      <InvoicesSummaryBar :selected-year="selectedYear" :selected-month="selectedMonth" />
       <div class="flex shrink-0 items-start gap-4">
         <InvoicesSummaryList
-          :selectedYear="selectedYear"
-          :selectedMonth="selectedMonth"
+          :selected-year="selectedYear"
+          :selected-month="selectedMonth"
           :type="'sales'"
         />
         <InvoicesSummaryList
-          :selectedYear="selectedYear"
-          :selectedMonth="selectedMonth"
+          :selected-year="selectedYear"
+          :selected-month="selectedMonth"
           :type="'purchases'"
         />
       </div>
-      <CasflowMonthlyChart :selectedYear="selectedYear" :selectedMonth="selectedMonth" />
+      <CasflowMonthlyChart :selected-year="selectedYear" :selected-month="selectedMonth" />
     </div>
   </div>
 </template>

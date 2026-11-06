@@ -50,11 +50,11 @@ onMounted(() => {
   <div class="flex justify-between items-center w-full pt-4 gap-4">
     <template v-for="monthNumber in monthNumbers" :key="monthNumber">
       <MonthTopBarSegment
-        :monthNumber="monthNumber"
-        :selectedYear="props.selectedYear"
-        :selectedMonth="props.selectedMonth"
+        :month-number="monthNumber"
+        :selected-year="props.selectedYear"
+        :selected-month="props.selectedMonth"
         :profit="monthlyProfits.find((item) => item.month_number === monthNumber)?.net_profit"
-        @update:selectedMonth="emit('update:selectedMonth', $event)"
+        @update:selected-month="emit('update:selectedMonth', $event)"
       />
     </template>
     <Button

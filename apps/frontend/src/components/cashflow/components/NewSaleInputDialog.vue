@@ -3,7 +3,6 @@ import {
   DatePicker,
   Button,
   Dialog,
-  useToast,
   Message,
   InputText,
   InputNumber,
@@ -12,7 +11,6 @@ import {
 } from "primevue";
 import { Form, FormField, type FormSubmitEvent } from "@primevue/forms";
 import { zodResolver } from "@primevue/forms/resolvers/zod";
-import { useMutation } from "@tanstack/vue-query";
 import z from "zod";
 import { onMounted, reactive, ref, watch } from "vue";
 
@@ -22,7 +20,6 @@ import type { CreateOrUpdate } from "../../../lib/types/company.ts";
 import type { invoiceTableType } from "../../../lib/types/invoices";
 import type { TaxRate } from "../../../lib/types/products";
 import { paymentStatus } from "../../../lib/types/invoices";
-import { create } from "domain";
 import { formatLocalDate } from "../../../lib/utils.ts";
 
 const props = defineProps<{
@@ -38,8 +35,6 @@ const emit = defineEmits(["update:visible", "success", "cancel"]);
 const emitRecord = (record: NewCashflowRecord) => {
   emit("success", record);
 };
-
-const toast = useToast();
 
 const editOrAddText = props.createOrUpdate === "create" ? "Dodaj nową" : "Edytuj";
 const typeOptions = ref<IncomeType[]>([]);
@@ -169,11 +164,16 @@ onMounted(() => {
 <template>
   <Dialog
     :visible="visible"
-    @update:visible="emit('update:visible', $event)"
     modal
     :draggable="false"
     :style="{ width: '40rem' }"
-    :contentStyle="{ display: 'flex', flexDirection: 'column', minHeight: '0', overflow: 'hidden' }"
+    :content-style="{
+      display: 'flex',
+      flexDirection: 'column',
+      minHeight: '0',
+      overflow: 'hidden',
+    }"
+    @update:visible="emit('update:visible', $event)"
   >
     <template #header>
       <div class="flex flex-col text-xl font-semibold">
@@ -189,10 +189,10 @@ onMounted(() => {
     <div class="flex flex-1 flex-col min-h-0 overflow-hidden card justify-center pt-2">
       <div class="card flex justify-center pt-2">
         <Form
-          :initialValues="initialValues"
+          :initial-values="initialValues"
           :resolver="resolver"
-          @submit="onFormSubmit"
           class="flex flex-col gap-4 w-full items-center sm:w-150"
+          @submit="onFormSubmit"
         >
           <div class="flex gap-4 w-full">
             <!-- COLUMN 1 -->
@@ -200,11 +200,11 @@ onMounted(() => {
               <!-- Type select -->
               <FloatLabel variant="on">
                 <Select
-                  v-model="selectedType"
                   id="type_select"
+                  v-model="selectedType"
                   :options="typeOptions"
                   class="h-10.5"
-                  emptyMessage="Brak opcji do wyboru"
+                  empty-message="Brak opcji do wyboru"
                   fluid
                 >
                   <template #value="slotProps">
@@ -236,17 +236,17 @@ onMounted(() => {
                   <InputText v-bind="$field.props" id="name_input" type="text" fluid />
                   <label for="name_input">Nazwa pozycji/klienta/dostawcy</label>
                 </FloatLabel>
-                <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-                  $field.error?.message
-                }}</Message>
+                <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                  {{ $field.error?.message }}
+                </Message>
               </FormField>
               <!-- netValue input -->
               <FormField v-slot="$field" name="netValue" class="flex flex-col gap-1">
                 <FloatLabel variant="on">
                   <InputNumber
                     v-bind="$field.props"
-                    v-model="initialValues.netValue"
                     id="netValue_input"
+                    v-model="initialValues.netValue"
                     mode="currency"
                     currency="PLN"
                     locale="pl-PL"
@@ -254,18 +254,18 @@ onMounted(() => {
                   />
                   <label for="netValue_input">Wartość netto</label>
                 </FloatLabel>
-                <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-                  $field.error?.message
-                }}</Message>
+                <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                  {{ $field.error?.message }}
+                </Message>
               </FormField>
               <!-- paymentStatus select -->
               <FloatLabel variant="on">
                 <Select
-                  v-model="selectedPaymentStatus"
                   id="paymentStatus_select"
+                  v-model="selectedPaymentStatus"
                   :options="paymentStatusOptions"
                   class="h-10.5"
-                  emptyMessage="Brak opcji do wyboru"
+                  empty-message="Brak opcji do wyboru"
                   fluid
                 >
                   <template #value="slotProps">
@@ -298,29 +298,30 @@ onMounted(() => {
               <!-- Date input -->
               <FloatLabel variant="on">
                 <DatePicker
-                  v-model="selectedDate"
                   id="date_input"
-                  date-format="dd/mm/yy"
-                  placeholder="dd/mm/rrrr"
-                  :manualInput="false"
-                  showButtonBar
-                  showIcon
-                  iconDisplay="input"
-                  :min-date="new Date(2000, 0, 1)"
-                  :max-date="new Date(new Date().setFullYear(new Date().getFullYear() + 1))"
+                  v-model="selectedDate"
                   v-tooltip.bottom="
                     'Wybierz datę sprzedaży/zakupu, jeśli dane obejmują okres czasu, wybierz datę w miesiącu dla którego chcesz je przypisać'
                   "
+                  date-format="dd/mm/yy"
+                  placeholder="dd/mm/rrrr"
+                  :manual-input="false"
+                  show-button-bar
+                  show-icon
+                  icon-display="input"
+                  :min-date="new Date(2000, 0, 1)"
+                  :max-date="new Date(new Date().setFullYear(new Date().getFullYear() + 1))"
                   fluid
                 >
                   <template #buttonbar="{ todayCallback }">
                     <Button
                       size="small"
                       severity="secondary"
-                      @click="todayCallback"
                       variant="outlined"
-                      >Dziś</Button
+                      @click="todayCallback"
                     >
+                      Dziś
+                    </Button>
                   </template>
                 </DatePicker>
                 <label for="date_input">Data</label>
@@ -331,18 +332,18 @@ onMounted(() => {
                   <InputText v-bind="$field.props" id="description_input" type="text" fluid />
                   <label for="description_input">Opis (Opcjonalnie)</label>
                 </FloatLabel>
-                <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">{{
-                  $field.error?.message
-                }}</Message>
+                <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
+                  {{ $field.error?.message }}
+                </Message>
               </FormField>
               <!-- taxRate select -->
               <FloatLabel variant="on">
                 <Select
-                  v-model="selectedTaxRate"
                   id="taxRate_select"
+                  v-model="selectedTaxRate"
                   :options="props.taxRates"
                   class="h-10.5"
-                  emptyMessage="Brak opcji do wyboru"
+                  empty-message="Brak opcji do wyboru"
                   fluid
                 >
                   <template #value="slotProps">

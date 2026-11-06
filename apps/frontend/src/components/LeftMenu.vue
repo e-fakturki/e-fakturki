@@ -98,15 +98,15 @@ const items = ref([
             v-ripple
             :href="href"
             v-bind="props.action"
-            @click="navigate"
             :class="['flex items-center w-full', { 'bg-primary-100 font-semibold': isActive }]"
+            @click="navigate"
           >
             <span :class="item.icon" />
             <span class="ml-2">{{ item.label }}</span>
             <Badge
               v-if="
                 (item.route === '/sales' && invoicesStore.getSalesInvoicesCount > 0) ||
-                (item.route === '/purchases' && invoicesStore.getPurchaseInvoicesCount > 0)
+                  (item.route === '/purchases' && invoicesStore.getPurchaseInvoicesCount > 0)
               "
               class="ml-auto rounded-xs"
               :value="

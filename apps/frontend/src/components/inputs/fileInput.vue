@@ -22,15 +22,15 @@ const isFileChosen = ref(false);
 <template>
   <FileUpload
     :disabled="isFileChosen"
-    :withCredentials="props.credentials"
-    :showCancelButton="false"
-    :showUploadButton="false"
-    chooseLabel="Wybierz plik"
+    :with-credentials="props.credentials"
+    :show-cancel-button="false"
+    :show-upload-button="false"
+    choose-label="Wybierz plik"
     :multiple="false"
     :accept="props.acceptableFiles"
-    :maxFileSize="props.maxFileSize"
-    :fileLimit="1"
-    :invalidFileTypeMessage="props.invalidFileTypeMessage"
+    :max-file-size="props.maxFileSize"
+    :file-limit="1"
+    :invalid-file-type-message="props.invalidFileTypeMessage"
     @select="
       (event) => {
         if (!event.files || event.files.length === 0) return;
