@@ -1,17 +1,31 @@
-"""Product API services."""
+from math import isclose
+from decimal import Decimal, ROUND_HALF_UP
+from backend.schemas.products import ProductCreate, ProductUpdate
+from backend.db.models.products import tax_rate_values
+from backend.services.invoices.entries_validator import MONEY_TOLERANCE
 
-from decimal import ROUND_HALF_UP, Decimal
 
-from backend.web.api.products.schemas import ProductCreate
-
-
-def check_and_set_gross_price(payload: ProductCreate) -> ProductCreate:
+def check_and_set_gross_price(
+    payload: ProductCreate | ProductUpdate,
+) -> ProductCreate | ProductUpdate:
     """
-    Check if the gross price is set, and calculate it.
+    Validate the gross price, and fix if needed.
 
-    :param payload: The data for creating a new product record.
-    :return: Payload object
+    Args:
+        payload: The data for creating/updating a product record.
+
+    Returns:
+        Payload object.
     """
+    if payload.net_price and payload.tax_rate:
+        tax_rate_value = 1 + tax_rate_values[payload.tax_rate]
+        expected_gross_price = round(payload.net_price * tax_rate_value, 2)
+
+        if not isclose(
+            payload.gross_price, expected_gross_price, abs_tol=MONEY_TOLERANCE
+        ):
+            payload.gross_price = expected_gross_price
+
     if not payload.gross_price or payload.gross_price == 0:
         net_price = Decimal(payload.net_price)
         tax_rate = Decimal(payload.tax_rate)

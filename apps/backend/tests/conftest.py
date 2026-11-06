@@ -22,7 +22,8 @@ def anyio_backend() -> str:
     """
     Backend for anyio pytest plugin.
 
-    :return: backend name.
+    Returns:
+        Backend name.
     """
     return "asyncio"
 
@@ -32,7 +33,8 @@ async def _engine(anyio_backend: Any) -> AsyncGenerator[AsyncEngine]:
     """
     Create engine and databases.
 
-    :yield: new engine.
+    Yields:
+        New engine.
     """
     from backend.db.meta import meta
     from backend.db.models import load_all_models
@@ -62,8 +64,11 @@ async def dbsession(
     Fixture that returns a SQLAlchemy session with a SAVEPOINT, and the rollback to it
     after the test completes.
 
-    :param _engine: current engine.
-    :yields: async session.
+    Args:
+        _engine: current engine.
+
+    Yields:
+        Async session.
     """
     connection = await _engine.connect()
     trans = await connection.begin()
@@ -89,7 +94,8 @@ def fastapi_app(
     """
     Fixture for creating FastAPI app.
 
-    :return: fastapi app with mocked dependencies.
+    Returns:
+        Fastapi app with mocked dependencies.
     """
     application = get_app()
     application.dependency_overrides[get_db_session] = lambda: dbsession
@@ -103,8 +109,11 @@ async def client(
     """
     Fixture that creates client for requesting server.
 
-    :param fastapi_app: the application.
-    :yield: client for the app.
+    Args:
+        fastapi_app: the application.
+
+    Yields:
+        Client for the app.
     """
     async with AsyncClient(
         transport=ASGITransport(fastapi_app), base_url="http://test", timeout=2.0

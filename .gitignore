@@ -18,7 +18,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -71,6 +70,7 @@ instance/
 
 # Scrapy stuff:
 .scrapy
+data/
 
 # Sphinx documentation
 docs/_build/
@@ -81,6 +81,8 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+*.ipynb
+experimenting/
 
 # IPython
 profile_default/

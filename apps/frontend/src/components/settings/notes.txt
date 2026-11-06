@@ -1,0 +1,29 @@
+GENERAL
+----------------------------
+
+
+
+
+
+
+
+
+
+CASHFLOW SCREEN
+---------------------------
+const newClients = Math.floor(Math.random() * 5); // Względem poprzedniego miesiąca ? Czy calej bazy klientów?
+
+Nowi klienci:
+
+- Pierwsza faktura sprzedażowa w historii
+- Nowi w bazie kontrahentów
+
+const lostClients = Math.floor(Math.random() * 5); // Względem poprzedniego miesiąca ? Czy calej bazy klientów?
+
+
+
+Wybierz warunek określenia danego klienta nieaktywnym:
+
+- brak zakupu w miesiącu biezącym względem poprzedniego
+- brak zakupu w ciagu ostatnich 90 dni
+- brak zakupu w ciągu wybranego okresu: INPUT / CHOICE
