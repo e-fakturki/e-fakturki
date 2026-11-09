@@ -15,7 +15,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: "update:selectedMonth", monthNumber: number | null): void;
+  (e: "update:selectedMonth", monthNumber: number | null, monthlyProfit: number | undefined): void;
 }>();
 
 const toast = useToast();
@@ -31,7 +31,6 @@ const getMonthlyProfitListMutation = useMutation({
 
   onSuccess: (data) => {
     monthlyProfits.value = data;
-    console.log(monthlyProfits);
   },
 
   onError: (error) => {
@@ -54,7 +53,13 @@ onMounted(() => {
         :selected-year="props.selectedYear"
         :selected-month="props.selectedMonth"
         :profit="monthlyProfits.find((item) => item.month_number === monthNumber)?.net_profit"
-        @update:selected-month="emit('update:selectedMonth', $event)"
+        @update:selected-month="
+          emit(
+            'update:selectedMonth',
+            $event,
+            monthlyProfits.find((item) => item.month_number === monthNumber)?.net_profit,
+          )
+        "
       />
     </template>
     <Button
@@ -64,7 +69,7 @@ onMounted(() => {
         'month-segment-selected': props.selectedMonth === null,
       }"
       outlined
-      @click="emit('update:selectedMonth', null)"
+      @click="emit('update:selectedMonth', null, undefined)"
     >
       {{ `Cały rok ${props.selectedYear}` }}
     </Button>

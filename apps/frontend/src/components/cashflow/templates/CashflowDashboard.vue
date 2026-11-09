@@ -15,6 +15,7 @@ const toast = useToast();
 
 const selectedYear = ref(new Date().getFullYear());
 const selectedMonth = ref<number | null>(new Date().getMonth() + 1);
+const selectedMonthProfit = ref<number | undefined>(undefined);
 const currentYear = new Date().getFullYear();
 const currentMonth = new Date().getMonth() + 1;
 
@@ -24,9 +25,9 @@ watch([selectedYear, selectedMonth], ([year, month]) => {
   }
 });
 
-function onMonthSelect(monthNumber: number | null) {
-  console.log("Month selected:", monthNumber);
+function onMonthSelect(monthNumber: number | null, monthlyProfit: number | undefined) {
   selectedMonth.value = monthNumber;
+  selectedMonthProfit.value = monthlyProfit;
 }
 
 function onYearSelect(year: number) {
@@ -45,7 +46,11 @@ function onYearSelect(year: number) {
     />
 
     <div class="p-div-grey mt-4 gap-4 flex min-h-0 flex-1 flex-col justify-start overflow-y-auto">
-      <InvoicesSummaryBar :selected-year="selectedYear" :selected-month="selectedMonth" />
+      <InvoicesSummaryBar
+        :selected-year="selectedYear"
+        :selected-month="selectedMonth"
+        :monthly-profit="selectedMonthProfit"
+      />
       <div class="flex shrink-0 items-start gap-4">
         <InvoicesSummaryList
           :selected-year="selectedYear"
