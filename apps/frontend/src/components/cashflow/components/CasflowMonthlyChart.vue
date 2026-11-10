@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import type { MonthlyProfitItem } from "../../../lib/types/cashflow";
 import { Line } from "vue-chartjs";
 import {
   Chart as ChartJS,
@@ -19,6 +20,7 @@ import { monthsDictionary } from "../../../lib/constants.ts";
 const props = defineProps<{
   selectedYear: number;
   selectedMonth: number | null;
+  monthlyProfitList: MonthlyProfitItem[];
 }>();
 
 const getChartColors = () => {
@@ -31,6 +33,28 @@ const getChartColors = () => {
 };
 const chartColors = ref(getChartColors());
 let themeObserver: MutationObserver | undefined;
+const monthCount = ref<number>(0);
+const data = ref({
+  labels: [] as string[],
+  datasets: [
+    {
+      label: "Przychód netto",
+      backgroundColor: "rgba(121, 248, 121, 0.2)",
+      borderColor: "#79f879",
+      pointRadius: 0,
+      pointHoverRadius: 10,
+      data: [] as number[],
+    },
+    {
+      label: "Koszty netto",
+      backgroundColor: "rgba(248, 121, 121, 0.2)",
+      borderColor: "#f87979",
+      pointRadius: 0,
+      pointHoverRadius: 10,
+      data: [] as number[],
+    },
+  ],
+});
 
 onMounted(() => {
   themeObserver = new MutationObserver(() => {
@@ -44,34 +68,42 @@ onMounted(() => {
 
 onUnmounted(() => themeObserver?.disconnect());
 
-// Randomly generated cashflow values for demonstration purposes
-const monthCount = props.selectedMonth ?? 12;
-const cashflows = Array.from({ length: monthCount }, () => Math.floor(Math.random() * 1000));
-const costs = Array.from({ length: monthCount }, (_, i) =>
-  Math.floor(cashflows[i]! * (0.9 + Math.random() * 0.2)),
-);
+watch(
+  [() => props.selectedYear, () => props.selectedMonth, () => props.monthlyProfitList],
+  () => {
+    monthCount.value = props.selectedMonth ?? 12;
+    const profitByMonth = new Map(props.monthlyProfitList.map((item) => [item.month_number, item]));
 
-const data = {
-  labels: Object.values(monthsDictionary).slice(0, monthCount),
-  datasets: [
-    {
-      label: "Przychód netto",
-      backgroundColor: "rgba(121, 248, 121, 0.2)",
-      borderColor: "#79f879",
-      pointRadius: 0,
-      pointHoverRadius: 10,
-      data: cashflows,
-    },
-    {
-      label: "Koszty netto",
-      backgroundColor: "rgba(248, 121, 121, 0.2)",
-      borderColor: "#f87979",
-      pointRadius: 0,
-      pointHoverRadius: 10,
-      data: costs,
-    },
-  ],
-};
+    data.value = {
+      labels: Object.values(monthsDictionary).slice(0, monthCount.value),
+      datasets: [
+        {
+          label: "Przychód netto",
+          backgroundColor: "rgba(121, 248, 121, 0.2)",
+          borderColor: "#79f879",
+          pointRadius: 0,
+          pointHoverRadius: 10,
+          data: Array.from(
+            { length: monthCount.value },
+            (_, index) => profitByMonth.get(index + 1)?.net_sales ?? 0,
+          ),
+        },
+        {
+          label: "Koszty netto",
+          backgroundColor: "rgba(248, 121, 121, 0.2)",
+          borderColor: "#f87979",
+          pointRadius: 0,
+          pointHoverRadius: 10,
+          data: Array.from(
+            { length: monthCount.value },
+            (_, index) => profitByMonth.get(index + 1)?.net_costs ?? 0,
+          ),
+        },
+      ],
+    };
+  },
+  { immediate: true },
+);
 
 const options = computed<ChartOptions<"line">>(() => ({
   responsive: true,

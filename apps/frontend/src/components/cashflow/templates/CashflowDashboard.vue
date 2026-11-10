@@ -90,7 +90,11 @@ function onYearSelect(year: number) {
           "
         />
       </div>
-      <CasflowMonthlyChart :selected-year="selectedYear" :selected-month="selectedMonth" />
+      <CasflowMonthlyChart
+        :selected-year="selectedYear"
+        :selected-month="selectedMonth"
+        :monthly-profit-list="monthlyProfitList"
+      />
     </div>
   </div>
 </template>
