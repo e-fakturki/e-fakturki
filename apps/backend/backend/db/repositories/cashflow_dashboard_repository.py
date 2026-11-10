@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import Integer, and_, case, cast, func, literal, select, outerjoin
+from sqlalchemy import Integer, and_, or_, case, cast, func, literal, select, outerjoin
 
 from backend.db.models.invoices_payment import InvoicesPaymentTable
 from backend.db.models.invoices_brief import InvoicesBriefTable
@@ -17,45 +17,31 @@ async def get_monthly_profit_list(
     next_year_start = datetime(year + 1, 1, 1)
     month_number = cast(func.strftime("%m", InvoicesBriefTable.issue_date), Integer)
 
-    sales = (
-        select(
-            month_number.label("month_number"),
-            func.sum(InvoicesBriefTable.net_total).label("net_sales"),
-        )
-        .where(
-            InvoicesBriefTable.seller_nip == company_nip,
-            InvoicesBriefTable.issue_date >= year_start,
-            InvoicesBriefTable.issue_date < next_year_start,
-        )
-        .group_by(month_number)
-        .cte("sales")
-    )
 
-    costs = (
-        select(
-            month_number.label("month_number"),
-            func.sum(InvoicesBriefTable.net_total).label("net_costs"),
-        )
-        .where(
-            InvoicesBriefTable.buyer_nip == company_nip,
-            InvoicesBriefTable.issue_date >= year_start,
-            InvoicesBriefTable.issue_date < next_year_start,
-        )
-        .group_by(month_number)
-        .cte("costs")
+    is_sale = InvoicesBriefTable.seller_nip == company_nip
+    is_cost = InvoicesBriefTable.buyer_nip == company_nip
+
+    sales_total = func.sum(
+        case((is_sale, InvoicesBriefTable.net_total), else_ = 0)
+    )
+    costs_total = func.sum(
+        case((is_cost, InvoicesBriefTable.net_total), else_ = 0)
     )
 
     query = (
         select(
-            sales.c.month_number,
-            sales.c.net_sales,
-            costs.c.net_costs,
-            (sales.c.net_sales - costs.c.net_costs).label("net_profit"),
+            month_number.label("month_number"),
+            sales_total.label("net_sales"),
+            costs_total.label("net_costs"),
+            (sales_total - costs_total).label("net_profit"),
         )
-        .select_from(
-            sales.outerjoin(costs, sales.c.month_number == costs.c.month_number)
+        .where(
+            or_(is_sale, is_cost),
+            InvoicesBriefTable.issue_date >= year_start,
+            InvoicesBriefTable.issue_date < next_year_start,
         )
-        .order_by(sales.c.month_number)
+        .group_by(month_number)
+        .order_by(month_number)
     )
 
     result = await db.execute(query)
