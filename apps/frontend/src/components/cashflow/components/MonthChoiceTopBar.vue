@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Button, useToast } from "primevue";
 import { useMutation } from "@tanstack/vue-query";
-import { onMounted, ref } from "vue";
+import { ref, watch } from "vue";
 
 import { monthsDictionary } from "../../../lib/constants.ts";
 import MonthTopBarSegment from "./MonthTopBarSegment.vue";
@@ -15,13 +15,27 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: "update:selectedMonth", monthNumber: number | null, monthlyProfit: number | undefined): void;
+  (e: "update:selectedMonth", monthNumber: number | null): void;
+  (e: "fetch:monthlyProfitList", monthlyProfitList: MonthlyProfitItem[]): void;
 }>();
 
 const toast = useToast();
 const currentUserStore = useCurrentUserStore();
 
+const monthNumbers = Object.keys(monthsDictionary).map(Number);
 const monthlyProfits = ref<MonthlyProfitItem[]>([]);
+
+function selectMonth(monthNumber: number | null) {
+  emit("update:selectedMonth", monthNumber);
+
+  if (monthNumber === null) {
+    toast.add({
+      severity: "warn",
+      summary: "Brak danych dla wybranego miesiąca, dodaj dane lub pobierz faktury z KSeF",
+      life: 5000,
+    });
+  }
+}
 
 const getMonthlyProfitListMutation = useMutation({
   mutationFn: async () => {
@@ -31,6 +45,8 @@ const getMonthlyProfitListMutation = useMutation({
 
   onSuccess: (data) => {
     monthlyProfits.value = data;
+    emit("fetch:monthlyProfitList", data);
+    selectMonth(props.selectedMonth);
   },
 
   onError: (error) => {
@@ -38,11 +54,13 @@ const getMonthlyProfitListMutation = useMutation({
   },
 });
 
-const monthNumbers = Object.keys(monthsDictionary).map(Number);
-
-onMounted(() => {
-  getMonthlyProfitListMutation.mutate();
-});
+watch(
+  () => props.selectedYear,
+  () => {
+    getMonthlyProfitListMutation.mutate();
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
@@ -53,13 +71,7 @@ onMounted(() => {
         :selected-year="props.selectedYear"
         :selected-month="props.selectedMonth"
         :profit="monthlyProfits.find((item) => item.month_number === monthNumber)?.net_profit"
-        @update:selected-month="
-          emit(
-            'update:selectedMonth',
-            $event,
-            monthlyProfits.find((item) => item.month_number === monthNumber)?.net_profit,
-          )
-        "
+        @update:selected-month="selectMonth($event)"
       />
     </template>
     <Button
@@ -69,7 +81,7 @@ onMounted(() => {
         'month-segment-selected': props.selectedMonth === null,
       }"
       outlined
-      @click="emit('update:selectedMonth', null, undefined)"
+      @click="selectMonth(null)"
     >
       {{ `Cały rok ${props.selectedYear}` }}
     </Button>

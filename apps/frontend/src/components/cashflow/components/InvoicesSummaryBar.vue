@@ -16,7 +16,6 @@ const toast = useToast();
 const currentUserStore = useCurrentUserStore();
 
 const profit = ref<number | undefined>(props.monthlyProfit);
-// const profit = ref<number|null|undefined>(0);
 const salesAmount = ref<number | null | undefined>(0);
 const costAmount = ref<number | null | undefined>(0);
 const averageSaleValue = ref<number | null | undefined>(0);
@@ -48,17 +47,23 @@ const getMonthlySalesSummaryMutation = useMutation({
   },
 });
 
-watch([() => props.selectedYear, () => props.selectedMonth], () => {
-  // You can fetch real data here if needed
-  getMonthlySalesSummaryMutation.mutate();
-});
+watch(
+  [() => props.selectedYear, () => props.selectedMonth, () => props.monthlyProfit],
+  () => {
+    getMonthlySalesSummaryMutation.mutate();
+    profit.value = props.monthlyProfit;
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
   <div class="p-div-white flex flex-col gap-2">
     <!-- INVOICES SUMMARY -->
     <div class="flex flex-col gap-4 justify-start">
-      <h1 class="text-xl font-bold">Potencjalny dochód netto {{ formatPLN(profit!) }}</h1>
+      <h1 class="text-xl font-bold">
+        Potencjalny dochód netto {{ profit !== undefined ? formatPLN(profit!) : "-" }}
+      </h1>
       <div class="flex w-full justify-between">
         <div class="flex flex-col gap-2">
           <div class="flex flex-col gap-1">

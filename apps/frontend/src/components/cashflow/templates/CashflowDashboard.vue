@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
-
-import { useToast } from "primevue";
-import { useMutation } from "@tanstack/vue-query";
-import Toolbar from "primevue/toolbar";
+import type { MonthlyProfitItem } from "../../../lib/types/cashflow";
 
 import YearChoiceTopBar from "../components/YearChoiceTopBar.vue";
 import MonthChoiceTopBar from "../components/MonthChoiceTopBar.vue";
@@ -11,11 +8,10 @@ import InvoicesSummaryList from "../components/InvoicesSummaryList.vue";
 import InvoicesSummaryBar from "../components/InvoicesSummaryBar.vue";
 import CasflowMonthlyChart from "../components/CasflowMonthlyChart.vue";
 
-const toast = useToast();
-
 const selectedYear = ref(new Date().getFullYear());
 const selectedMonth = ref<number | null>(new Date().getMonth() + 1);
 const selectedMonthProfit = ref<number | undefined>(undefined);
+const monthlyProfitList = ref<MonthlyProfitItem[]>([]);
 const currentYear = new Date().getFullYear();
 const currentMonth = new Date().getMonth() + 1;
 
@@ -25,13 +21,14 @@ watch([selectedYear, selectedMonth], ([year, month]) => {
   }
 });
 
-function onMonthSelect(monthNumber: number | null, monthlyProfit: number | undefined) {
+function onMonthSelect(monthNumber: number | null) {
   selectedMonth.value = monthNumber;
-  selectedMonthProfit.value = monthlyProfit;
+  selectedMonthProfit.value = monthlyProfitList.value.find(
+    (item) => item.month_number === monthNumber,
+  )?.net_profit;
 }
 
 function onYearSelect(year: number) {
-  console.log("Year selected:", year);
   selectedYear.value = year;
 }
 </script>
@@ -43,6 +40,12 @@ function onYearSelect(year: number) {
       :selected-year="selectedYear"
       :selected-month="selectedMonth"
       @update:selected-month="onMonthSelect"
+      @fetch:monthlyProfitList="
+        (data) => {
+          monthlyProfitList = data;
+          onMonthSelect(selectedMonth);
+        }
+      "
     />
 
     <div class="p-div-grey mt-4 gap-4 flex min-h-0 flex-1 flex-col justify-start overflow-y-auto">
@@ -56,11 +59,35 @@ function onYearSelect(year: number) {
           :selected-year="selectedYear"
           :selected-month="selectedMonth"
           :type="'sales'"
+          :month-sales="
+            monthlyProfitList.find((item) => item.month_number === selectedMonth)?.net_sales
+          "
+          :previus-month-sales="
+            monthlyProfitList.find((item) => item.month_number === selectedMonth - 1)?.net_sales
+          "
+          :month-costs="
+            monthlyProfitList.find((item) => item.month_number === selectedMonth)?.net_costs
+          "
+          :previous-month-costs="
+            monthlyProfitList.find((item) => item.month_number === selectedMonth - 1)?.net_costs
+          "
         />
         <InvoicesSummaryList
           :selected-year="selectedYear"
           :selected-month="selectedMonth"
           :type="'purchases'"
+          :month-costs="
+            monthlyProfitList.find((item) => item.month_number === selectedMonth)?.net_costs
+          "
+          :previous-month-costs="
+            monthlyProfitList.find((item) => item.month_number === selectedMonth - 1)?.net_costs
+          "
+          :month-sales="
+            monthlyProfitList.find((item) => item.month_number === selectedMonth)?.net_sales
+          "
+          :previus-month-sales="
+            monthlyProfitList.find((item) => item.month_number === selectedMonth - 1)?.net_sales
+          "
         />
       </div>
       <CasflowMonthlyChart :selected-year="selectedYear" :selected-month="selectedMonth" />

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Button, DataTable, Column, Tag } from "primevue";
-import { computed, ref } from "vue";
+import { ref, watch } from "vue";
 import {
   paymentStatus,
   paymentStatusSeverity,
@@ -17,10 +17,17 @@ const props = defineProps<{
   selectedYear: number;
   selectedMonth: number | null;
   type: invoiceTableType;
+  monthSales: number | undefined;
+  previusMonthSales: number | undefined;
+  monthCosts: number | undefined;
+  previousMonthCosts: number | undefined;
 }>();
 
 const selectedInvoice = ref(null);
 const showSaleCostInputDialog = ref(false);
+const cashflow = ref<number | undefined>(0);
+const previousMonthCashflow = ref<number | undefined>(0);
+const percentageChange = ref<string | undefined>();
 
 function onInvoiceSelect(event: any) {
   selectedInvoice.value = event.data;
@@ -30,15 +37,36 @@ function onInvoiceUnselect() {
   selectedInvoice.value = null;
 }
 
-// Randomly generated cashflow values for demonstration purposes
-const cashflow = Math.floor(Math.random() * 10000);
-const previousCashflow = Math.floor(cashflow * 0.9);
+function updatePercentageChange() {
+  const current = cashflow.value;
+  const previous = previousMonthCashflow.value;
 
-const calculateAgainstPreviousMonth = computed(() => {
-  // Calculate the percentage difference with a + or - sign
-  const difference = ((cashflow - previousCashflow) / previousCashflow) * 100;
-  return (difference >= 0 ? "+" : "") + difference.toFixed(2);
-});
+  if (current === undefined || previous === undefined || previous === 0) {
+    percentageChange.value = undefined;
+    return;
+  }
+
+  const difference = ((current - previous) / previous) * 100;
+  percentageChange.value = `${difference >= 0 ? "+" : ""}${difference.toFixed(2)}%`;
+}
+
+watch(
+  [
+    () => props.selectedYear,
+    () => props.selectedMonth,
+    () => props.monthSales,
+    () => props.previusMonthSales,
+    () => props.monthCosts,
+    () => props.previousMonthCosts,
+  ],
+  () => {
+    cashflow.value = props.type === "sales" ? props.monthSales : props.monthCosts;
+    previousMonthCashflow.value =
+      props.type === "sales" ? props.previusMonthSales : props.previousMonthCosts;
+    updatePercentageChange();
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
@@ -47,19 +75,22 @@ const calculateAgainstPreviousMonth = computed(() => {
     <div class="flex justify-between items-center">
       <div class="flex flex-1 flex-col gap-2">
         <h1 class="text-xl font-bold">
-          {{ props.type === "sales" ? "Przychód netto" : "Koszty netto" }} {{ formatPLN(cashflow) }}
+          {{ props.type === "sales" ? "Przychód netto" : "Koszty netto" }}
+          {{ cashflow !== undefined ? formatPLN(cashflow) : "—" }}
         </h1>
         <div class="flex flex-1 gap-1">
           <h3 class="p-h3">vs poprzedni miesiąc:</h3>
           <h3
             :class="
-              (calculateAgainstPreviousMonth.startsWith('+') && props.type === 'sales') ||
-                (calculateAgainstPreviousMonth.startsWith('-') && props.type === 'purchases')
+              (percentageChange?.startsWith('+') && props.type === 'sales') ||
+              (percentageChange?.startsWith('-') && props.type === 'purchases')
                 ? 'text-green-600'
-                : 'text-red-600'
+                : percentageChange
+                  ? 'text-red-600'
+                  : ''
             "
           >
-            {{ calculateAgainstPreviousMonth }}%
+            {{ percentageChange ?? "—" }}
           </h3>
         </div>
       </div>
