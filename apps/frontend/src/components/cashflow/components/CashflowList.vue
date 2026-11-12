@@ -38,30 +38,77 @@ const percentageChange = ref<string | undefined>();
 const currentOffset = ref(0);
 const sortBy = ref<string | null>(null);
 const sortOrder = ref<"asc" | "desc" | null>(null);
+const hasMoreCashflowItems = ref(true);
+const pageSize = 50;
+
+function getCashflowQueryKey() {
+  return JSON.stringify([
+    currentUserStore.getCompanyId,
+    props.selectedYear,
+    props.selectedMonth,
+    props.type,
+    sortBy.value,
+    sortOrder.value,
+  ]);
+}
 
 const getMonthlyCashflowListLazyMutation = useMutation({
-  mutationFn: async () => {
+  mutationFn: async (request: { offset: number; queryKey: string }) => {
     const companyId = currentUserStore.getCompanyId;
     return await getCashflowListLazy(
       companyId!,
       props.selectedYear,
       props.selectedMonth,
       props.type,
-      currentOffset.value,
-      50,
+      request.offset,
+      pageSize,
       sortBy.value,
       sortOrder.value,
     );
   },
 
-  onSuccess: (data) => {
-    cashflowItems.value = data;
+  onSuccess: (data, request) => {
+    if (request.queryKey !== getCashflowQueryKey()) {
+      return;
+    }
+
+    cashflowItems.value = request.offset === 0 ? data : [...cashflowItems.value, ...data];
+    currentOffset.value = request.offset + data.length;
+    hasMoreCashflowItems.value = data.length === pageSize;
   },
 
   onError: (error) => {
     toast.add({ severity: "error", summary: error.response?.data?.detail, life: 5000 });
   },
 });
+
+function loadFirstCashflowPage() {
+  currentOffset.value = 0;
+  hasMoreCashflowItems.value = true;
+  cashflowItems.value = [];
+  getMonthlyCashflowListLazyMutation.mutate({ offset: 0, queryKey: getCashflowQueryKey() });
+}
+
+function loadNextCashflowPage() {
+  if (!hasMoreCashflowItems.value || getMonthlyCashflowListLazyMutation.isPending.value) {
+    return;
+  }
+
+  getMonthlyCashflowListLazyMutation.mutate({
+    offset: currentOffset.value,
+    queryKey: getCashflowQueryKey(),
+  });
+}
+
+function onCashflowScroll(event: Event) {
+  const scrollContainer = event.target as HTMLElement;
+  if (
+    scrollContainer.scrollHeight - scrollContainer.scrollTop - scrollContainer.clientHeight <=
+    48
+  ) {
+    loadNextCashflowPage();
+  }
+}
 
 function onInvoiceSelect(event: any) {
   selectedInvoice.value = event.data;
@@ -88,6 +135,7 @@ watch(
   [
     () => props.selectedYear,
     () => props.selectedMonth,
+    () => props.type,
     () => props.monthSales,
     () => props.previusMonthSales,
     () => props.monthCosts,
@@ -98,7 +146,7 @@ watch(
     previousMonthCashflow.value =
       props.type === "sales" ? props.previusMonthSales : props.previousMonthCosts;
     updatePercentageChange();
-    getMonthlyCashflowListLazyMutation.mutate();
+    loadFirstCashflowPage();
   },
   { immediate: true },
 );
@@ -137,7 +185,7 @@ watch(
       ></Button>
     </div>
     <!-- INVOICES BRIEF TABLE -->
-    <div class="p-div-white flex flex-1 flex-col gap-2">
+    <div class="p-div-white flex flex-1 flex-col gap-2" @scroll.capture="onCashflowScroll">
       <DataTable
         v-model:selection="selectedInvoice"
         :value="cashflowItems"
