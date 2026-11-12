@@ -4,9 +4,9 @@ import type { MonthlyProfitItem } from "../../../lib/types/cashflow";
 
 import YearChoiceTopBar from "../components/YearChoiceTopBar.vue";
 import MonthChoiceTopBar from "../components/MonthChoiceTopBar.vue";
-import InvoicesSummaryList from "../components/InvoicesSummaryList.vue";
-import InvoicesSummaryBar from "../components/InvoicesSummaryBar.vue";
-import CasflowMonthlyChart from "../components/CasflowMonthlyChart.vue";
+import CashflowList from "../components/CashflowList.vue";
+import CashflowSummaryBar from "../components/CashflowSummaryBar.vue";
+import CashflowMonthlyChart from "../components/CasflowMonthlyChart.vue";
 
 const selectedYear = ref(new Date().getFullYear());
 const selectedMonth = ref<number | null>(new Date().getMonth() + 1);
@@ -49,13 +49,13 @@ function onYearSelect(year: number) {
     />
 
     <div class="p-div-grey mt-4 gap-4 flex min-h-0 flex-1 flex-col justify-start overflow-y-auto">
-      <InvoicesSummaryBar
+      <CashflowSummaryBar
         :selected-year="selectedYear"
         :selected-month="selectedMonth"
         :monthly-profit="selectedMonthProfit"
       />
       <div class="flex shrink-0 items-start gap-4">
-        <InvoicesSummaryList
+        <CashflowList
           :selected-year="selectedYear"
           :selected-month="selectedMonth"
           :type="'sales'"
@@ -72,7 +72,7 @@ function onYearSelect(year: number) {
             monthlyProfitList.find((item) => item.month_number === selectedMonth - 1)?.net_costs
           "
         />
-        <InvoicesSummaryList
+        <CashflowList
           :selected-year="selectedYear"
           :selected-month="selectedMonth"
           :type="'purchases'"
@@ -90,7 +90,7 @@ function onYearSelect(year: number) {
           "
         />
       </div>
-      <CasflowMonthlyChart
+      <CashflowMonthlyChart
         :selected-year="selectedYear"
         :selected-month="selectedMonth"
         :monthly-profit-list="monthlyProfitList"

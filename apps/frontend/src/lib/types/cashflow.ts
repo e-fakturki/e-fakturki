@@ -39,3 +39,14 @@ export interface MonthlySalesSummary {
   unpaid_sales: number;
   unpaid_costs: number;
 }
+
+export interface CashflowListItem {
+  year_number: number;
+  month_number: number;
+  id: string;
+  issue_date: string;
+  type: string;
+  contractor_name: string;
+  net_value: number;
+  payment_status: string;
+}

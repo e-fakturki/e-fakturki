@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { Button, DataTable, Column, Tag } from "primevue";
-import { ref, watch } from "vue";
+import { Button, DataTable, Column, Tag, useToast } from "primevue";
+import { onMounted, ref, watch } from "vue";
+import { useMutation } from "@tanstack/vue-query";
+
 import {
   paymentStatus,
   paymentStatusSeverity,
   type invoiceTableType,
-} from "../../../lib/types/invoices";
-import { formatPLN } from "../../../lib/utils";
-
-import items from "../../../assets/mock_invoices";
-
-import { incomeTypes, costTypes } from "../../../lib/constants";
+} from "../../../lib/types/invoices.ts";
+import { formatPLN } from "../../../lib/utils.ts";
+import { incomeTypes, costTypes } from "../../../lib/constants.ts";
 import SaleCostInputDialog from "./AddSalesDialog.vue";
+import { useCurrentUserStore } from "../../../stores/currentUserStore.ts";
+import { getCashflowListLazy } from "../../../lib/services/cashflowDashboardService.ts";
+import type { CashflowListItem } from "../../../lib/types/cashflow.ts";
 
 const props = defineProps<{
   selectedYear: number;
@@ -23,11 +25,43 @@ const props = defineProps<{
   previousMonthCosts: number | undefined;
 }>();
 
+const toast = useToast();
+const currentUserStore = useCurrentUserStore();
+
 const selectedInvoice = ref(null);
 const showSaleCostInputDialog = ref(false);
 const cashflow = ref<number | undefined>(0);
+const cashflowItems = ref<CashflowListItem[]>([]);
 const previousMonthCashflow = ref<number | undefined>(0);
 const percentageChange = ref<string | undefined>();
+
+const currentOffset = ref(0);
+const sortBy = ref<string | null>(null);
+const sortOrder = ref<"asc" | "desc" | null>(null);
+
+const getMonthlyCashflowListLazyMutation = useMutation({
+  mutationFn: async () => {
+    const companyId = currentUserStore.getCompanyId;
+    return await getCashflowListLazy(
+      companyId!,
+      props.selectedYear,
+      props.selectedMonth,
+      props.type,
+      currentOffset.value,
+      50,
+      sortBy.value,
+      sortOrder.value,
+    );
+  },
+
+  onSuccess: (data) => {
+    cashflowItems.value = data;
+  },
+
+  onError: (error) => {
+    toast.add({ severity: "error", summary: error.response?.data?.detail, life: 5000 });
+  },
+});
 
 function onInvoiceSelect(event: any) {
   selectedInvoice.value = event.data;
@@ -64,6 +98,7 @@ watch(
     previousMonthCashflow.value =
       props.type === "sales" ? props.previusMonthSales : props.previousMonthCosts;
     updatePercentageChange();
+    getMonthlyCashflowListLazyMutation.mutate();
   },
   { immediate: true },
 );
@@ -105,8 +140,8 @@ watch(
     <div class="p-div-white flex flex-1 flex-col gap-2">
       <DataTable
         v-model:selection="selectedInvoice"
-        :value="items"
-        data-key="inv_nr"
+        :value="cashflowItems"
+        data-key="id"
         striped-rows
         selection-mode="single"
         removable-sort
@@ -115,7 +150,7 @@ watch(
         @row-select="onInvoiceSelect"
         @row-unselect="onInvoiceUnselect"
       >
-        <Column field="date" header="Data" sortable></Column>
+        <Column field="issue_date" header="Data" sortable></Column>
         <Column field="type" header="Typ" sortable>
           <template #body="slotProps">
             {{
@@ -126,13 +161,13 @@ watch(
           </template>
         </Column>
         <Column
-          field="buyer"
+          field="contractor_name"
           :header="props.type === 'sales' ? 'Klient' : 'Dostawca'"
           sortable
         ></Column>
-        <Column field="sum_net" header="Wartość netto" sortable>
+        <Column field="net_value" header="Wartość netto" sortable>
           <template #body="slotProps">
-            {{ formatPLN(slotProps.data.sum_net) }}
+            {{ formatPLN(slotProps.data.net_value) }}
           </template>
         </Column>
         <Column field="payment_status" header="Status płatności" sortable>
