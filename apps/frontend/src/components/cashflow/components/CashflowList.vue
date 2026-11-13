@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Button, DataTable, Column, Tag, useToast } from "primevue";
-import { onMounted, ref, watch } from "vue";
+import { Button, DataTable, Column, Tag, useToast, type DataTableSortEvent } from "primevue";
+import { ref, watch } from "vue";
 import { useMutation } from "@tanstack/vue-query";
 
 import {
@@ -8,11 +8,15 @@ import {
   paymentStatusSeverity,
   type invoiceTableType,
 } from "../../../lib/types/invoices.ts";
-import { formatPLN } from "../../../lib/utils.ts";
+import { formatLocalDate, formatPLN } from "../../../lib/utils.ts";
 import { incomeTypes, costTypes } from "../../../lib/constants.ts";
 import SaleCostInputDialog from "./AddSalesDialog.vue";
 import { useCurrentUserStore } from "../../../stores/currentUserStore.ts";
-import { getCashflowListLazy } from "../../../lib/services/cashflowDashboardService.ts";
+import {
+  getCashflowListLazy,
+  type sortByOptions,
+  type sortOrderOptions,
+} from "../../../lib/services/cashflowDashboardService.ts";
 import type { CashflowListItem } from "../../../lib/types/cashflow.ts";
 
 const props = defineProps<{
@@ -36,8 +40,8 @@ const previousMonthCashflow = ref<number | undefined>(0);
 const percentageChange = ref<string | undefined>();
 
 const currentOffset = ref(0);
-const sortBy = ref<string | null>(null);
-const sortOrder = ref<"asc" | "desc" | null>(null);
+const sortBy = ref<sortByOptions>(null);
+const sortOrder = ref<sortOrderOptions>(null);
 const hasMoreCashflowItems = ref(true);
 const pageSize = 50;
 
@@ -118,6 +122,17 @@ function onInvoiceUnselect() {
   selectedInvoice.value = null;
 }
 
+function onListSort(event: DataTableSortEvent) {
+  sortBy.value = event.sortField === undefined ? null : (event.sortField as sortByOptions);
+
+  if (event.sortOrder === null) {
+    sortOrder.value = null;
+  } else {
+    sortOrder.value = event.sortOrder === 1 ? "asc" : "desc";
+  }
+  loadFirstCashflowPage();
+}
+
 function updatePercentageChange() {
   const current = cashflow.value;
   const previous = previousMonthCashflow.value;
@@ -177,12 +192,12 @@ watch(
           </h3>
         </div>
       </div>
-      <Button
+      <!-- <Button
         v-tooltip.bottom="type === 'sales' ? 'Dodaj dane sprzedażowe' : 'Dodaj dane kosztowe'"
         icon="pi pi-plus"
         rounded
         @click="showSaleCostInputDialog = true"
-      ></Button>
+      ></Button> -->
     </div>
     <!-- INVOICES BRIEF TABLE -->
     <div class="p-div-white flex flex-1 flex-col gap-2" @scroll.capture="onCashflowScroll">
@@ -197,8 +212,13 @@ watch(
         scroll-height="400px"
         @row-select="onInvoiceSelect"
         @row-unselect="onInvoiceUnselect"
+        @sort="onListSort"
       >
-        <Column field="issue_date" header="Data" sortable></Column>
+        <Column field="issue_date" header="Data" sortable>
+          <template #body="slotProps">
+            {{ formatLocalDate(new Date(slotProps.data.issue_date)) }}
+          </template></Column
+        >
         <Column field="type" header="Typ" sortable>
           <template #body="slotProps">
             {{

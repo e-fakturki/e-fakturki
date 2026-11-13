@@ -5,6 +5,15 @@ import type { invoiceTableType } from "../types/invoices";
 
 const baseUrl = apiConfig.apiBaseUrl + apiConfig.endpoints.cashflow;
 
+export type sortByOptions =
+  | "issue_date"
+  | "type"
+  | "contractor_name"
+  | "net_value"
+  | "payment_status"
+  | null;
+export type sortOrderOptions = "asc" | "desc" | null;
+
 export const getMonthlyProfitList = async (
   companyId: string,
   year: number,
@@ -43,8 +52,8 @@ export const getCashflowListLazy = async (
   type: invoiceTableType,
   offset: number = 0,
   limit: number = 50,
-  sortBy?: string | null,
-  sortOrder?: "asc" | "desc" | null,
+  sortBy?: sortByOptions,
+  sortOrder?: sortOrderOptions,
 ): Promise<CashflowListItem[]> => {
   try {
     const response = await axios.get<CashflowListItem[]>(

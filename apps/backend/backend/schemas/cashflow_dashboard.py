@@ -7,7 +7,7 @@ from backend.db.models.invoices_payment import PaymentStatus
 CASHFLOW_TYPE = Literal["sales", "purchases"]
 SALE_TYPE = Literal["invoice", "bill", "other"]
 COST_TYPE = Literal["invoice", "operational", "salary", "tax", "insurance", "lease", "other"]
-SORT_CASHFLOW_LIST_BY = Literal["year_number", "month_number", "net_value"]
+SORT_CASHFLOW_LIST_BY = Literal["issue_date", "type", "contractor_name", "net_value", "payment_status"]
 SORT_ORDER = Literal["asc", "desc"]
 
 
