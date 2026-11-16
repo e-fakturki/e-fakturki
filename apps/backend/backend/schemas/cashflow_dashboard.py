@@ -77,3 +77,13 @@ class CashflowListItem(YearMonth):
     payment_status: PaymentStatus | None = Field(
         None, description="Payment status of the cashflow item"
     )
+
+
+class ContractorCashflowItem(YearMonth):
+    """Schema for contractor cashflow item."""
+
+    contractor_nip: str | None = Field(None, description="NIP of the contractor")
+    contractor_name: str | None = Field(None, description="Name of the contractor")
+    net_cashflow: float | None = Field(
+        None, description="Net cashflow(income or sales) of the contractor"
+    )
