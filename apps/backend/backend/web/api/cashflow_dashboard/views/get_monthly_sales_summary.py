@@ -11,7 +11,9 @@ from backend.schemas.cashflow_dashboard import MonthlyProfitSummary
 router = APIRouter()
 
 
-@router.get("/monthly-sales-summary", status_code=200, response_model=MonthlyProfitSummary)
+@router.get(
+    "/monthly-sales-summary", status_code=200, response_model=MonthlyProfitSummary
+)
 async def get_monthly_sales_summary(
     company_id: str = Query(..., description="The ID of the company to filter by."),
     year: int = Query(..., description="The year to filter by."),

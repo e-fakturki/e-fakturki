@@ -2,7 +2,7 @@
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import { Doughnut } from "vue-chartjs";
 import { Chart as ChartJS, ArcElement, Title, Tooltip, Legend, type ChartOptions } from "chart.js";
-import schemeSet3 from "d3-scale-chromatic";
+import { schemeSet3 } from "d3-scale-chromatic";
 
 import type { MonthlyProfitItem } from "../../../lib/types/cashflow";
 import { formatPLN } from "../../../lib/utils";

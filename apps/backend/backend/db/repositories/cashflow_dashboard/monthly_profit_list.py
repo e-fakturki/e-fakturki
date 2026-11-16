@@ -2,27 +2,22 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import Integer, or_, case, cast, func, select
 
 from backend.db.models.invoices_brief import InvoicesBriefTable
-from backend.schemas.cashflow_dashboard import MontlyProfitItem
+from backend.schemas.cashflow_dashboard import MonthlyProfitItem
 
 
 async def get_monthly_profit_list(
     db: AsyncSession, company_nip: str, year: int
-) -> list[MontlyProfitItem]:
+) -> list[MonthlyProfitItem]:
     """Get a list of monthly profits for a company for the year."""
 
     year_number = cast(func.strftime("%Y", InvoicesBriefTable.issue_date), Integer)
     month_number = cast(func.strftime("%m", InvoicesBriefTable.issue_date), Integer)
 
-
     is_sale = InvoicesBriefTable.seller_nip == company_nip
     is_cost = InvoicesBriefTable.buyer_nip == company_nip
 
-    sales_total = func.sum(
-        case((is_sale, InvoicesBriefTable.net_total), else_ = 0)
-    )
-    costs_total = func.sum(
-        case((is_cost, InvoicesBriefTable.net_total), else_ = 0)
-    )
+    sales_total = func.sum(case((is_sale, InvoicesBriefTable.net_total), else_=0))
+    costs_total = func.sum(case((is_cost, InvoicesBriefTable.net_total), else_=0))
 
     query = (
         select(
@@ -41,4 +36,13 @@ async def get_monthly_profit_list(
 
     result = await db.execute(query)
 
-    return [MontlyProfitItem(**month) for month in result.mappings().all()]
+    return [
+        MonthlyProfitItem(
+            year_number=year,
+            month_number=month["month_number"],
+            net_sales=month["net_sales"],
+            net_costs=month["net_costs"],
+            net_profit=month["net_profit"],
+        )
+        for month in result.mappings().all()
+    ]

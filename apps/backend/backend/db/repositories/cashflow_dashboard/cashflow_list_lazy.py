@@ -3,13 +3,18 @@ from sqlalchemy import Integer, and_, cast, func, select, outerjoin
 
 from backend.db.models.invoices_payment import InvoicesPaymentTable
 from backend.db.models.invoices_brief import InvoicesBriefTable
-from backend.schemas.cashflow_dashboard import CASHFLOW_TYPE, SORT_CASHFLOW_LIST_BY, SORT_ORDER, CashflowListItem
+from backend.schemas.cashflow_dashboard import (
+    CASHFLOW_TYPE,
+    SORT_CASHFLOW_LIST_BY,
+    SORT_ORDER,
+    CashflowListItem,
+)
 
 
 async def get_cashflow_list_lazy(
-    db: AsyncSession, 
-    company_nip: str, 
-    year: int, 
+    db: AsyncSession,
+    company_nip: str,
+    year: int,
     month: int,
     type: CASHFLOW_TYPE,
     offset: int,
@@ -39,7 +44,6 @@ async def get_cashflow_list_lazy(
     sort_column = sort_columns.get(sort_by, InvoicesBriefTable.issue_date)
     sort_expression = sort_column.asc() if sort_order == "asc" else sort_column.desc()
 
-
     result = await db.execute(
         select(
             InvoicesBriefTable.id,
@@ -67,13 +71,16 @@ async def get_cashflow_list_lazy(
         .offset(offset)
     )
 
-    return [CashflowListItem(
-        year_number=year,
-        month_number=month,
-        id=item["id"],
-        issue_date=item["issue_date"],
-        type="invoice",
-        contractor_name=item["contractor_name"],
-        net_value=item["net_value"],
-        payment_status=item["payment_status"]
-    ) for item in result.mappings().all()]
+    return [
+        CashflowListItem(
+            year_number=year,
+            month_number=month,
+            id=item["id"],
+            issue_date=item["issue_date"],
+            type="invoice",
+            contractor_name=item["contractor_name"],
+            net_value=item["net_value"],
+            payment_status=item["payment_status"],
+        )
+        for item in result.mappings().all()
+    ]
