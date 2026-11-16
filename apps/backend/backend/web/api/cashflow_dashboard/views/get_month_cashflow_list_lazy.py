@@ -1,8 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from backend.db.repositories.cashflow_dashboard_repository import (
-    get_cashflow_list_lazy,
-)
+from backend.db.repositories.cashflow_dashboard.cashflow_list_lazy import get_cashflow_list_lazy
 from backend.db.repositories.company_repository import get_company_nip
 from backend.db.dependencies import get_db_session
 from backend.schemas.auth import UserRead
