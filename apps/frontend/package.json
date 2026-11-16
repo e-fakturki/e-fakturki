@@ -18,6 +18,7 @@
     "@tanstack/vue-query-devtools": "^6.1.10",
     "axios": "^1.13.6",
     "chart.js": "^4.5.1",
+    "d3-scale-chromatic": "^3.1.1",
     "fuzzy-search": "^3.2.1",
     "json5": "^2.2.3",
     "jwt-decode": "^4.0.0",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
+    "@types/d3-scale-chromatic": "^3.1.0",
     "@types/node": "^24.10.1",
     "@typescript-eslint/eslint-plugin": "^8.54.0",
     "@typescript-eslint/parser": "^8.54.0",

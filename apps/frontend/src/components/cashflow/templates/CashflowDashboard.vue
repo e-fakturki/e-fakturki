@@ -7,6 +7,7 @@ import MonthChoiceTopBar from "../components/MonthChoiceTopBar.vue";
 import CashflowList from "../components/CashflowList.vue";
 import CashflowSummaryBar from "../components/CashflowSummaryBar.vue";
 import CashflowMonthlyChart from "../components/CasflowMonthlyChart.vue";
+import CashflowDonutChart from "../components/CashflowDonutChart.vue";
 
 const selectedYear = ref(new Date().getFullYear());
 const selectedMonth = ref<number | null>(new Date().getMonth() + 1);
@@ -95,6 +96,26 @@ function onYearSelect(year: number) {
         :selected-month="selectedMonth"
         :monthly-profit-list="monthlyProfitList"
       />
+      <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <CashflowDonutChart
+          :selected-year="selectedYear"
+          :selected-month="selectedMonth"
+          title="Udział produktów/usług w przychodzie netto"
+          :monthly-profit-list="monthlyProfitList"
+        />
+        <CashflowDonutChart
+          :selected-year="selectedYear"
+          :selected-month="selectedMonth"
+          title="Udział klientów/źródeł w przychodzie netto"
+          :monthly-profit-list="monthlyProfitList"
+        />
+        <CashflowDonutChart
+          :selected-year="selectedYear"
+          :selected-month="selectedMonth"
+          title="Udział dostawców/wydatków w kosztach netto"
+          :monthly-profit-list="monthlyProfitList"
+        />
+      </div>
     </div>
   </div>
 </template>

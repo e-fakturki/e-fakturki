@@ -14,7 +14,7 @@ const showKsefCredsForm = ref(false);
 
 function onLogin() {
   showLoginForm.value = false;
-  router.push("/new-invoice");
+  router.push("/cashflow");
 }
 
 function onRegister() {
