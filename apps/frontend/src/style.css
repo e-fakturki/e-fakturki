@@ -4,6 +4,7 @@
 :root {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   --chart-text: var(--color-gray-600);
+  --chart-tooltip-text: var(--color-gray-200);
   --chart-grid: var(--color-gray-300);
   --chart-tooltip-bg: var(--color-white-900);
   --donut-chart-border: #ffffff;
@@ -11,6 +12,7 @@
 
 .prime-dark-mode {
   --chart-text: var(--color-gray-400);
+  --chart-tooltip-text: var(--color-gray-400);
   --chart-grid: var(--color-gray-700);
   --chart-tooltip-bg: var(--color-neutral-900);
   --donut-chart-border: var(--color-neutral-900);

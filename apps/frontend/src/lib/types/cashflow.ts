@@ -50,3 +50,13 @@ export interface CashflowListItem {
   net_value: number;
   payment_status: string;
 }
+
+export type CashflowDonutChartType = "products" | "sales" | "purchases";
+
+export interface CashflowPerContractorDistributionItem {
+  year_number: number;
+  month_number: number;
+  contractor_nip: string;
+  contractor_name: string;
+  net_cashflow: number;
+}

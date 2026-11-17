@@ -27,6 +27,7 @@ const getChartColors = () => {
   const styles = getComputedStyle(document.documentElement);
   return {
     text: styles.getPropertyValue("--chart-text").trim(),
+    tooltipText: styles.getPropertyValue("--chart-tooltip-text").trim(),
     grid: styles.getPropertyValue("--chart-grid").trim(),
     tooltipBackground: styles.getPropertyValue("--chart-tooltip-bg").trim(),
   };
@@ -143,9 +144,9 @@ const options = computed<ChartOptions<"line">>(() => ({
     tooltip: {
       backgroundColor: chartColors.value.tooltipBackground,
       titleFont: { size: 14 },
-      titleColor: chartColors.value.text,
+      titleColor: chartColors.value.tooltipText,
       bodyFont: { size: 14 },
-      bodyColor: chartColors.value.text,
+      bodyColor: chartColors.value.tooltipText,
       footerFont: { size: 14 },
       footerColor: chartColors.value.text,
       callbacks: {

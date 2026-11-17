@@ -97,23 +97,23 @@ function onYearSelect(year: number) {
         :monthly-profit-list="monthlyProfitList"
       />
       <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <CashflowDonutChart
+        <!-- <CashflowDonutChart
           :selected-year="selectedYear"
           :selected-month="selectedMonth"
           title="Udział produktów/usług w przychodzie netto"
-          :monthly-profit-list="monthlyProfitList"
-        />
+          type="products"
+        /> -->
         <CashflowDonutChart
           :selected-year="selectedYear"
           :selected-month="selectedMonth"
           title="Udział klientów/źródeł w przychodzie netto"
-          :monthly-profit-list="monthlyProfitList"
+          type="sales"
         />
         <CashflowDonutChart
           :selected-year="selectedYear"
           :selected-month="selectedMonth"
           title="Udział dostawców/wydatków w kosztach netto"
-          :monthly-profit-list="monthlyProfitList"
+          type="purchases"
         />
       </div>
     </div>

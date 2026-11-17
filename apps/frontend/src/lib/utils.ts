@@ -41,6 +41,13 @@ export function roundTo2(value: number): number {
   return Math.round(value * 100) / 100;
 }
 
+export function trimLabels(label: string, maxLength: number) {
+  if (label.length > maxLength) {
+    return label.slice(0, maxLength) + "...";
+  }
+  return label;
+}
+
 export function calculateGrossPrice(netPrice: number, taxRate: number): number {
   return roundTo2(netPrice * (1 + taxRate));
 }

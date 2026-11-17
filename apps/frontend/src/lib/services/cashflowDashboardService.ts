@@ -1,7 +1,13 @@
 import axios from "axios";
 import { apiConfig } from "../../config";
-import type { CashflowListItem, MonthlyProfitItem, MonthlySalesSummary } from "../types/cashflow";
+import type {
+  CashflowListItem,
+  CashflowPerContractorDistributionItem,
+  MonthlyProfitItem,
+  MonthlySalesSummary,
+} from "../types/cashflow";
 import type { invoiceTableType } from "../types/invoices";
+import type { CashflowDonutChartType } from "../types/cashflow";
 
 const baseUrl = apiConfig.apiBaseUrl + apiConfig.endpoints.cashflow;
 
@@ -58,6 +64,23 @@ export const getCashflowListLazy = async (
   try {
     const response = await axios.get<CashflowListItem[]>(
       `${baseUrl}/month-cashflow-list?company_id=${companyId}&year=${year}&month=${month}&type=${type}&offset=${offset}&limit=${limit}${sortBy ? `&sort_by=${sortBy}` : ""}${sortOrder ? `&sort_order=${sortOrder}` : ""}`,
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getCashflowPerContractorDistribution = async (
+  companyId: string,
+  year: number,
+  month: number | null,
+  cashflowType: CashflowDonutChartType,
+): Promise<CashflowPerContractorDistributionItem[]> => {
+  try {
+    const response = await axios.get<CashflowPerContractorDistributionItem[]>(
+      `${baseUrl}/cashflow-per-contractor-distribution?company_id=${companyId}&year=${year}&month=${month}&cashflow_type=${cashflowType}`,
     );
 
     return response.data;
